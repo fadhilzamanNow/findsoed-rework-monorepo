@@ -119,4 +119,6 @@ app.get("/category", async (req: Request, res: Response) => {
   }
 });
 
-export default app;
+app.listen(port, () => {
+  console.log(`Server running on port ${port}`);
+});
