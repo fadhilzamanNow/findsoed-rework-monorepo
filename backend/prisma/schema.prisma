@@ -1,0 +1,101 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider      = "prisma-client-js"
+  output        = "../generated/prisma"
+  binaryTargets = ["rhel-openssl-3.0.x"]
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id          String     @id @unique @default(uuid())
+  email       String     @unique
+  username    String
+  password    String
+  posts       Post[]
+  phoneNumber String?
+  profile     Profile?
+  comment     Comments[]
+}
+
+model Profile {
+  id       Int     @id @default(autoincrement())
+  imageUrl String?
+  user     User    @relation(fields: [userId], references: [id])
+  userId   String  @unique
+}
+
+model Post {
+  id           String   @id @default(uuid())
+  itemName     String
+  itemDetail   String
+  itemLostDate DateTime @db.Date()
+
+  created_at DateTime  @default(now()) @db.Timestamp()
+  updated_at DateTime?
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+
+  status   PostStatus @relation(fields: [statusId], references: [id])
+  statusId Int
+
+  category   PostCategory @relation(fields: [categoryId], references: [id])
+  categoryId Int
+
+  comment Comments[]
+  image   PostImages[]
+
+  coordinate Coordinates?
+}
+
+model PostStatus {
+  id         Int    @id @default(autoincrement())
+  statusName String @unique
+  post       Post[]
+}
+
+model PostCategory {
+  id           Int    @id @default(autoincrement())
+  categoryName String @unique
+  post         Post[]
+}
+
+model Comments {
+  id         String    @id @default(uuid())
+  message    String
+  created_at DateTime  @default(now()) @db.Timestamp()
+  updated_at DateTime?
+  post       Post      @relation(fields: [postId], references: [id])
+  postId     String
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+}
+
+model PostImages {
+  id           Int    @id @default(autoincrement())
+  postImageUrl String
+
+  post   Post   @relation(fields: [postId], references: [id])
+  postId String
+}
+
+model Coordinates {
+  id           String @id @default(uuid())
+  latitude     Float
+  longitude    Float
+  locationName String
+
+  post   Post   @relation(fields: [postId], references: [id])
+  postId String @unique
+}

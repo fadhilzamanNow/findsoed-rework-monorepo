@@ -1,0 +1,386 @@
+openapi: 3.0.0
+info:
+  title: Findsoed Rework
+  description: Aplikasi ini adalah rework dari Findsoed sebagai bagian yang akan di-consume oleh frontend yang dibuat oleh kerangka kerja React dan Vue untuk mengetes unjuk kerja dengan menerapkan code splitting pada aplikasi frontend sebagai topik TA yang akan dilakukan 
+  version: 1.0.0
+  contact:
+    name: Muhammad Ilham Isfadhillah  
+    email: muhammad.isfadhillah@mhs.unsoed.ac.id
+servers:
+  - url: http://localhost:{port}
+    description: Development Server
+    variables:
+      port:
+        enum:
+        - '3500'
+        - '3000'
+        - '443'
+        - '80'
+        default: '3500'
+        description: Untuk merubah port
+  - url: http://vercel
+    desription: Production Server
+tags:
+  - name : Auth
+    description: Autentikasi Pengguna
+  - name: Posts
+    description: Semua API terkait Post Barang Hilang
+  - name: Comment
+    description: Semua API terkait Comment pada Sebuah Post
+components:
+  schemas:
+    RegisterRequest:
+      type: object
+      required:
+        - email
+        - username
+        - password
+      properties:
+        email:
+          type: string
+          example: progz@gmail.com
+        username:
+          type: string
+          example: progz123
+        password:
+          type: string
+          format: password
+          example: mypassword123
+        imageUrl:
+          type: string
+          example: profilePic.jpg
+    RegisterResponse:
+      type: object
+      required:
+        - id
+        - email
+        - username
+      properties:
+        id:
+          type: string
+          example: adasjdnas12321-asdsadqw1dgd23-asdasda1241-asda1241
+          readOnly: true
+        email:
+          type: string
+          example: progz@gmail.com
+        username:
+          type: string
+          example: progz123
+    LoginRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          example: progz@gmail.com
+        password:
+          type: string
+          example: progz1234
+    LoginResponse:
+      type: object
+      required:
+        - authToken
+        - success
+        - message
+      properties:
+        authToken:
+          type: string
+          example: qasdiahsidhhh.123h12hr3h92huqh0fg80s8a.as129hah
+        success: 
+          type : boolean
+          example: true
+        message:
+          type: string
+          example: Selamat anda telah berhasil login
+    Post:
+      type: object
+      required:
+        - itemName
+      properties:
+        itemName: 
+          type: string
+          example: Xiaomi Redmi Note 9 Pro
+        itemDetail:
+          type: string
+          example: HP ini hilang di Malaysia
+        itemCategory: 
+          type: string
+          description: Pilih kategori dari barang yang ingin dilaporkan
+          enum:
+          - Handphone
+          - Laptop
+          - Kartu
+          - Dompet
+          - Lain Lain
+    Comment:
+      type: object
+      required: 
+        - message
+      properties:
+        message:
+          type: string
+          example: Bang ini HPnya nemu disini
+  securitySchemes:
+    findsoed_auth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Autentikasi ini diperlukan untuk mengakses route Commment dan Posts
+
+paths:
+  /auth/register:
+    post:
+      tags: 
+        - Auth
+      summary: Registrasi Akun
+      description: Mendaftar email, username, dan password untuk dapat login
+      requestBody:
+        description: Buat kaun untuk dapat login
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+      responses:
+        201:
+          description: Akun berhasil dibuat
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/RegisterResponse'
+                  - type: object
+                    properties:
+                      success: 
+                        type: boolean
+                        example: true
+                      message:
+                        type: string
+                        example: Selamat anda berhasil membuat akun
+        400:
+            description: Akun Gagal dibuat
+            content:
+              application/json:
+                schema:
+                  allOf:
+                    - $ref: '#/components/schemas/RegisterResponse'
+                    - type: object
+                      properties:
+                        success: 
+                          type: boolean
+                          example: true
+                        message:
+                          type: string
+                          enum:
+                            - Email yang anda masukkan telah digunakan
+                            - Anda tidak memasukkan email
+                            - Anda tidak memasukkan password
+                            - Anda tidak memasukkan username
+                          default: Anda tidak memasukkan username
+               
+  /auth/login:
+    post:
+      tags: 
+        - Auth
+      summary: Login Akun
+      description: Memasukkan email dan password yang terdaftar pada database dan akan diberikan akses token untuk mengakses rute yang membutuhkan token
+ 
+  /auth/edit:
+    patch:
+      tags:
+        - Auth
+      summary : Edit Profile
+
+  /post/create:
+    post:
+      tags:
+        - Posts
+      summary : Buat Barang Hilang
+  
+  /post/:
+    get:
+      tags:
+        - Posts
+      summary: Ambil Semua Barang Hilang
+  
+  /post/edit/{id}:
+    put:
+      tags:
+        - Posts
+      summary: Edit Barang Hilang
+  
+  /post/delete/{id}:
+    delete:
+      tags: 
+        - Posts
+      summary: Hapus Barang Hilang
+  
+  /post/{id}:
+    parameters:
+      - name: id
+        required: true
+        description: Post id untuk menentukan detail dari post yang ingin dilihat
+        schema:
+          type: string
+          example: iasdhi124h1-ahbsd1b41b-hbjbajsdb15123
+          writeOnly: true
+    get:
+      tags: 
+        - Posts
+      summary: Detail Barang Hilang
+  
+  /comment/{id}:
+    parameters:
+      - name: id
+        required: true
+        description: Post id untuk mencari seluruh komen dari post tertentu
+        schema:
+          type: string
+          example: iasdhi124h1-ahbsd1b41b-hbjbajsdb15123
+          writeOnly: true 
+    get:
+      tags:
+        - Comment
+      summary: Mengambil Comment dari sebuah Post tertentu
+      responses:
+        201:
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    message: 
+                      type: string
+                    postId:
+                      type: string
+                    userId:
+                      type: string
+                    created_at:
+                      type: string
+                      format: date-time
+                    updated_at:
+                      type: string
+                      format: date-time
+        500:
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message: 
+                    type: string
+  
+  /comment/create/{id}:
+    parameters:
+      - name: id
+        required: true
+        description: Post id untuk membuat sebuah komen dari post tertentu
+        schema:
+          type: string
+          example: iasdhi124h1-ahbsd1b41b-hbjbajsdb15123
+          writeOnly: true 
+    post:
+      tags:
+        - Comment
+      summary: Membuat Comment dari sebuah Post tertentu
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Comment"
+      responses:
+        201:
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - type: object
+                    properties:
+                      success:
+                        type: boolean
+                        example: true
+                      message: 
+                        type: string
+                        example: Selamat anda berhasil membuat sebuah komen
+                  - $ref: "#/components/schemas/Comment"
+        400:
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success: 
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Komen gagal dibuat
+
+  /comment/edit/{id}:
+    parameters:
+      - name: id
+        required: true
+        description: Comment id untuk mengedit komen tertentu
+        schema:
+          type: string
+          example: iasdhi124h1-ahbsd1b41b-hbjbajsdb15123
+          writeOnly: true 
+    patch:
+      tags:
+        - Comment
+      summary: Mengambil Comment dari sebuah Post tertentu
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Ini pesan untuk diedit
+      responses:
+        201:
+          description: Komen berhasil diedit
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  success: 
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Komen berhasil diedit
+        400:
+          description: Komen gagal untuk diedit
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Komen gagal untuk diedit
+  
+  /comment/delete/{id}:
+    parameters:
+      - name: id
+        required: truedari
+        description: Comment id untuk menghapus komen tertentu
+        schema:
+          type: string
+          example: iasdhi124h1-ahbsd1b41b-hbjbajsdb15123
+          writeOnly: true 
+    delete:
+      tags:
+        - Comment
+      summary: Menghapus Comment dari sebuah Post tertentu
+
+    

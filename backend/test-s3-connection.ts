@@ -1,0 +1,146 @@
+import { S3Client, ListBucketsCommand, PutObjectCommand } from "@aws-sdk/client-s3";
+import "dotenv/config";
+
+/**
+ * Test script to verify AWS S3 connection and credentials
+ * Run with: npx ts-node test-s3-connection.ts
+ */
+
+async function testS3Connection() {
+  console.log("🔍 Testing AWS S3 Connection...\n");
+
+  // Check environment variables
+  console.log("📋 Checking environment variables:");
+  const requiredEnvVars = [
+    "AWS_REGION",
+    "AWS_ACCESS_KEY_ID",
+    "AWS_SECRET_ACCESS_KEY",
+    "AWS_S3_BUCKET_NAME",
+  ];
+
+  let missingVars = false;
+  for (const varName of requiredEnvVars) {
+    const value = process.env[varName];
+    if (!value) {
+      console.log(`   ❌ ${varName}: NOT SET`);
+      missingVars = true;
+    } else {
+      // Mask sensitive data
+      const displayValue =
+        varName.includes("KEY") || varName.includes("SECRET")
+          ? value.substring(0, 4) + "****"
+          : value;
+      console.log(`   ✅ ${varName}: ${displayValue}`);
+    }
+  }
+
+  if (missingVars) {
+    console.error(
+      "\n❌ Missing required environment variables. Please check your .env file."
+    );
+    process.exit(1);
+  }
+
+  console.log("\n");
+
+  // Initialize S3 Client
+  const s3Client = new S3Client({
+    region: process.env.AWS_REGION!,
+    credentials: {
+      accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
+      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
+    },
+  });
+
+  try {
+    // Test 1: List Buckets
+    console.log("🧪 Test 1: Listing S3 buckets...");
+    const listBucketsCommand = new ListBucketsCommand({});
+    const bucketList = await s3Client.send(listBucketsCommand);
+
+    if (bucketList.Buckets && bucketList.Buckets.length > 0) {
+      console.log(`   ✅ Found ${bucketList.Buckets.length} bucket(s):`);
+      bucketList.Buckets.forEach((bucket) => {
+        const isTargetBucket =
+          bucket.Name === process.env.AWS_S3_BUCKET_NAME;
+        console.log(
+          `      ${isTargetBucket ? "👉" : "  "} ${bucket.Name}${isTargetBucket ? " (Target)" : ""}`
+        );
+      });
+    } else {
+      console.log("   ⚠️  No buckets found in your AWS account");
+    }
+
+    // Test 2: Check if target bucket exists
+    console.log("\n🧪 Test 2: Checking target bucket...");
+    const targetBucket = process.env.AWS_S3_BUCKET_NAME;
+    const bucketExists = bucketList.Buckets?.some(
+      (b) => b.Name === targetBucket
+    );
+
+    if (bucketExists) {
+      console.log(`   ✅ Bucket "${targetBucket}" exists`);
+    } else {
+      console.log(
+        `   ❌ Bucket "${targetBucket}" NOT FOUND. Please create it first.`
+      );
+      process.exit(1);
+    }
+
+    // Test 3: Upload test file
+    console.log("\n🧪 Test 3: Uploading test file...");
+    const testFileName = `test/connection-test-${Date.now()}.txt`;
+    const testContent = `S3 Connection Test - ${new Date().toISOString()}`;
+
+    const uploadCommand = new PutObjectCommand({
+      Bucket: targetBucket,
+      Key: testFileName,
+      Body: Buffer.from(testContent),
+      ContentType: "text/plain",
+    });
+
+    await s3Client.send(uploadCommand);
+    console.log(`   ✅ Successfully uploaded test file: ${testFileName}`);
+
+    // Generate URL
+    const fileUrl = `https://${targetBucket}.s3.${process.env.AWS_REGION}.amazonaws.com/${testFileName}`;
+    console.log(`   🔗 File URL: ${fileUrl}`);
+
+    console.log("\n✅ All tests passed! Your S3 configuration is working correctly.");
+    console.log("\n📝 Next steps:");
+    console.log("   1. Configure bucket policy for public access (if needed)");
+    console.log("   2. Set up CORS configuration");
+    console.log("   3. Start your server with: npm run dev");
+    console.log("   4. Clean up test files from S3 bucket");
+
+  } catch (error: any) {
+    console.error("\n❌ Error during S3 connection test:");
+
+    if (error.name === "InvalidAccessKeyId") {
+      console.error("   - Invalid AWS Access Key ID");
+      console.error("   - Check your AWS_ACCESS_KEY_ID in .env file");
+    } else if (error.name === "SignatureDoesNotMatch") {
+      console.error("   - Invalid AWS Secret Access Key");
+      console.error("   - Check your AWS_SECRET_ACCESS_KEY in .env file");
+    } else if (error.name === "AccessDenied") {
+      console.error("   - Access denied to S3 resources");
+      console.error("   - Check IAM user permissions");
+    } else if (error.name === "NoSuchBucket") {
+      console.error(`   - Bucket "${process.env.AWS_S3_BUCKET_NAME}" does not exist`);
+      console.error("   - Create the bucket or check the bucket name");
+    } else {
+      console.error(`   - ${error.name}: ${error.message}`);
+    }
+
+    console.error("\n💡 Troubleshooting tips:");
+    console.error("   1. Verify credentials in AWS IAM Console");
+    console.error("   2. Ensure IAM user has S3 permissions");
+    console.error("   3. Check if bucket name and region are correct");
+    console.error("   4. Review .env file for typos");
+
+    process.exit(1);
+  }
+}
+
+// Run the test
+testS3Connection();

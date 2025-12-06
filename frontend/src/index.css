@@ -1,0 +1,140 @@
+
+@import 'tailwindcss';
+
+
+html {
+  scroll-behavior: smooth;
+}
+
+@layer utilities {
+  .full-green {
+    @apply text-lime-500 bg-lime-500 
+  }
+
+  .animate-infinity{
+    animation : infinity 25s linear infinite;
+  }
+
+
+  .custom-clip {
+      clip-path: polygon(20% 0%, 100% 0, 100% 100%, 0% 100%);
+  }
+}
+
+@layer base{
+  h6 {
+    @apply text-green-500 font-bold
+  }
+}
+
+@layer components{
+  .card {
+    @apply h-[30px] w-[30px] ring-1 ring-lime-400 border
+  }
+}
+
+@utility test{
+  @apply shadow-2xl shadow-amber-300
+}
+@theme{
+  --font-inter: "Inter", sans-serif; 
+  --font-itim : "Itim", sans-serif;
+  --breakpoint-xss : 400px;
+  --breakpoint-xs : 500px;
+  
+
+  /* --animate-blob : blob 0.4 infinite;
+
+  @keyframes blob{
+    0%{
+      transform : "translate(0px,0px) scale(1)";
+      
+    },
+    33%{
+      transform : "translate(30px,-50px)  scale(1.2)";
+    },
+    66%{
+      transform : "translate(-20px,20px) scale(0.8)";
+    },
+    100%{
+      transform : "translate(0px,0px) scale(1)";
+    }
+  } */
+
+
+
+
+} 
+
+
+
+.iti {
+  --iti-path-flags-1x: url('../node_modules/intl-tel-input/build/img/flags.png');
+  --iti-path-flags-2x: url('../node_modules/intl-tel-input/build/img/flags@2x.png');
+  --iti-path-globe-1x: url('../node_modules/intl-tel-input/build/img/globe.png');
+  --iti-path-globe-2x: url('../node_modules/intl-tel-input/build/img/globe@2x.png');
+}
+
+@layer base{
+
+}
+
+@keyframes infinity{
+  0%{
+      transform: translateX(30%);
+  }
+  100%{
+      transform: translateX(-100%);
+  }
+}
+
+
+@layer utilities{
+  .animation-delay-2000{
+    animation-delay: 2s;
+  }
+  .animation-delay-4000{
+    animation-delay: 4s;
+  }
+}
+
+.own-swiper{
+  padding: 10px 0;
+}
+
+.own-swiper .swiper-slide {
+  height: auto;
+}
+
+.swiper-button-disabled {
+  opacity : 0.5;
+  cursor: not-allowed;
+}
+
+.swiper-button-disabled:hover {
+  background-color: white;
+}
+
+.detail-swiper{
+  padding: 10px 0;
+}
+
+.detail-swiper .swiper-slide {
+  height: auto;
+}
+
+.swiper-pagination-bullet {
+  width: 20px;
+  height: 20px;
+  text-align: center;
+  line-height: 20px;
+  font-size: 12px;
+  color: #000;
+  opacity: 1;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.swiper-pagination-bullet-active {
+  color: #fff;
+  background: #54fc06;
+}

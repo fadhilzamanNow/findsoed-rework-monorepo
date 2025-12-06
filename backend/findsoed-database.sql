@@ -1,0 +1,1064 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 17.4
+-- Dumped by pg_dump version 17.4
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET transaction_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- Name: public; Type: SCHEMA; Schema: -; Owner: postgres
+--
+
+-- *not* creating schema, since initdb creates it
+
+
+ALTER SCHEMA public OWNER TO postgres;
+
+--
+-- Name: SCHEMA public; Type: COMMENT; Schema: -; Owner: postgres
+--
+
+COMMENT ON SCHEMA public IS '';
+
+
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
+
+--
+-- Name: Comments; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."Comments" (
+    id text NOT NULL,
+    message text NOT NULL,
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at timestamp(3) without time zone,
+    "postId" text NOT NULL,
+    "userId" text NOT NULL
+);
+
+
+ALTER TABLE public."Comments" OWNER TO postgres;
+
+--
+-- Name: Coordinates; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."Coordinates" (
+    id text NOT NULL,
+    latitude double precision NOT NULL,
+    longitude double precision NOT NULL,
+    "locationName" text NOT NULL,
+    "postId" text NOT NULL
+);
+
+
+ALTER TABLE public."Coordinates" OWNER TO postgres;
+
+--
+-- Name: Post; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."Post" (
+    id text NOT NULL,
+    "itemName" text NOT NULL,
+    "itemDetail" text NOT NULL,
+    "itemLostDate" date NOT NULL,
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at timestamp(3) without time zone,
+    "userId" text NOT NULL,
+    "statusId" integer NOT NULL,
+    "categoryId" integer NOT NULL
+);
+
+
+ALTER TABLE public."Post" OWNER TO postgres;
+
+--
+-- Name: PostCategory; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."PostCategory" (
+    id integer NOT NULL,
+    "categoryName" text NOT NULL
+);
+
+
+ALTER TABLE public."PostCategory" OWNER TO postgres;
+
+--
+-- Name: PostCategory_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public."PostCategory_id_seq"
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public."PostCategory_id_seq" OWNER TO postgres;
+
+--
+-- Name: PostCategory_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public."PostCategory_id_seq" OWNED BY public."PostCategory".id;
+
+
+--
+-- Name: PostImages; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."PostImages" (
+    id integer NOT NULL,
+    "postImageUrl" text NOT NULL,
+    "postId" text NOT NULL
+);
+
+
+ALTER TABLE public."PostImages" OWNER TO postgres;
+
+--
+-- Name: PostImages_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public."PostImages_id_seq"
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public."PostImages_id_seq" OWNER TO postgres;
+
+--
+-- Name: PostImages_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public."PostImages_id_seq" OWNED BY public."PostImages".id;
+
+
+--
+-- Name: PostStatus; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."PostStatus" (
+    id integer NOT NULL,
+    "statusName" text NOT NULL
+);
+
+
+ALTER TABLE public."PostStatus" OWNER TO postgres;
+
+--
+-- Name: PostStatus_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public."PostStatus_id_seq"
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public."PostStatus_id_seq" OWNER TO postgres;
+
+--
+-- Name: PostStatus_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public."PostStatus_id_seq" OWNED BY public."PostStatus".id;
+
+
+--
+-- Name: Profile; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."Profile" (
+    id integer NOT NULL,
+    "imageUrl" text,
+    "userId" text NOT NULL
+);
+
+
+ALTER TABLE public."Profile" OWNER TO postgres;
+
+--
+-- Name: Profile_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public."Profile_id_seq"
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public."Profile_id_seq" OWNER TO postgres;
+
+--
+-- Name: Profile_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public."Profile_id_seq" OWNED BY public."Profile".id;
+
+
+--
+-- Name: User; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."User" (
+    id text NOT NULL,
+    email text NOT NULL,
+    username text NOT NULL,
+    password text NOT NULL,
+    "phoneNumber" text
+);
+
+
+ALTER TABLE public."User" OWNER TO postgres;
+
+--
+-- Name: _prisma_migrations; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public._prisma_migrations (
+    id character varying(36) NOT NULL,
+    checksum character varying(64) NOT NULL,
+    finished_at timestamp with time zone,
+    migration_name character varying(255) NOT NULL,
+    logs text,
+    rolled_back_at timestamp with time zone,
+    started_at timestamp with time zone DEFAULT now() NOT NULL,
+    applied_steps_count integer DEFAULT 0 NOT NULL
+);
+
+
+ALTER TABLE public._prisma_migrations OWNER TO postgres;
+
+--
+-- Name: PostCategory id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."PostCategory" ALTER COLUMN id SET DEFAULT nextval('public."PostCategory_id_seq"'::regclass);
+
+
+--
+-- Name: PostImages id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."PostImages" ALTER COLUMN id SET DEFAULT nextval('public."PostImages_id_seq"'::regclass);
+
+
+--
+-- Name: PostStatus id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."PostStatus" ALTER COLUMN id SET DEFAULT nextval('public."PostStatus_id_seq"'::regclass);
+
+
+--
+-- Name: Profile id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Profile" ALTER COLUMN id SET DEFAULT nextval('public."Profile_id_seq"'::regclass);
+
+
+--
+-- Data for Name: Comments; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public."Comments" (id, message, created_at, updated_at, "postId", "userId") FROM stdin;
+36f4a2c2-b5b8-485e-b38f-6d70a4047ce7	ini stnk apa bang	2025-05-21 17:24:41.888	\N	b9f4d822-2365-4234-8819-d8bd00c3b24e	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+da5593ac-1edb-4651-b517-8e62805ad32a	mantap	2025-05-21 17:40:22.197	\N	b9f4d822-2365-4234-8819-d8bd00c3b24e	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+374875bd-57d6-4ce1-8820-d337fedab0c1	testing dlu	2025-05-21 17:51:45.162	\N	b9f4d822-2365-4234-8819-d8bd00c3b24e	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+e5f88a9e-d384-4734-b544-c662a26f0797	test	2025-05-21 18:35:13.351	\N	b9f4d822-2365-4234-8819-d8bd00c3b24e	9d2ec67b-c048-43d4-bb80-57af2593f2d8
+06b2ebc7-79f9-4be7-b07d-036e8f221a13	mantap	2025-05-22 06:30:25.729	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+b3084f17-7b6b-4364-bb48-8ef383ec8074	keren kak	2025-05-22 11:10:48.528	\N	ad7d0837-da64-47f1-8827-8964954475fe	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+630d4d7a-657d-415c-968b-a2c86507ad2c	wokee	2025-05-22 17:34:38.229	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+c277e8a0-a848-401d-a73d-a6896a4de378	yo	2025-05-22 17:59:57.072	\N	5a782a29-2a18-4c2f-895e-cc70987b5684	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+0435c939-a382-4bc7-a9d0-b94bdfb7b9b3	mantap cuy	2025-05-22 18:00:06.923	\N	b9f4d822-2365-4234-8819-d8bd00c3b24e	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+93e14fa9-44cc-4d8a-8f09-55fc3e5e8794	a	2025-05-22 18:02:37.098	\N	b9f4d822-2365-4234-8819-d8bd00c3b24e	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+88463e03-439a-4a95-9162-59ec98896fde	a	2025-05-22 18:02:37.417	\N	b9f4d822-2365-4234-8819-d8bd00c3b24e	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+f1f73103-7292-4d86-87fd-a06a13f51742	a	2025-05-22 18:02:37.949	\N	b9f4d822-2365-4234-8819-d8bd00c3b24e	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+c8fedad4-c435-4db9-89f3-7e0b6348c7e5	a	2025-05-22 18:02:38.558	\N	b9f4d822-2365-4234-8819-d8bd00c3b24e	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+f035e2f2-c673-4db8-9ba1-9ef43c98df54	a	2025-05-22 18:02:39.212	\N	b9f4d822-2365-4234-8819-d8bd00c3b24e	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+a6ca1f0e-5677-4e40-bcf5-8c65ec7f03f8	a	2025-05-22 18:02:47.617	\N	ad7d0837-da64-47f1-8827-8964954475fe	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+6fd70289-8728-42e7-9aea-2634a8c68423	a	2025-05-22 18:02:47.934	\N	ad7d0837-da64-47f1-8827-8964954475fe	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+eac6e842-a404-45df-9249-a30c07489248	a	2025-05-22 18:02:48.242	\N	ad7d0837-da64-47f1-8827-8964954475fe	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+a86e0388-7d0d-4b5c-b80b-dfbb1ef542d9	a	2025-05-22 18:02:48.59	\N	ad7d0837-da64-47f1-8827-8964954475fe	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+d3b958e2-c599-4739-a5fc-ed8840cad6d7	a	2025-05-22 18:02:48.963	\N	ad7d0837-da64-47f1-8827-8964954475fe	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+88415a77-7ce6-4d14-ad49-c7dacfd71218	a	2025-05-22 18:02:49.354	\N	ad7d0837-da64-47f1-8827-8964954475fe	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+f1c699da-f599-4d4b-b375-637c2245b04d	a	2025-05-22 18:02:49.903	\N	ad7d0837-da64-47f1-8827-8964954475fe	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+52a53146-e668-423e-8b01-253ed5a267d4	a	2025-05-22 18:02:50.382	\N	ad7d0837-da64-47f1-8827-8964954475fe	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+d59f70ce-b151-4510-90d6-baa76b0e4578	Hello guys	2025-05-26 10:00:42.917	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+e14d098f-5b27-4288-a49c-4d695b521609	Ini piring apa	2025-05-26 10:00:59.031	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+3c1fe2f1-f766-4b92-b9bf-323165a01a63	ga tau	2025-05-28 09:32:41.045	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+79cf5be8-90fc-444a-b87a-bd5605b897fc	asd	2025-05-28 09:35:00.905	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+8f97cc54-7fac-47b8-b762-e895a8b41ae5	asd	2025-05-28 09:35:01.32	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+93e5bebe-7896-4fc6-81b5-596521a0db1b	keren cuy	2025-05-28 09:43:58.376	\N	e7cc9019-994c-431f-bf63-b110dcf6b276	868c8c88-661e-4de1-959b-54f201a3bf2a
+b4538a64-4440-409a-ad22-202b5b15deb2	wokee 	2025-05-28 09:44:04.142	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	868c8c88-661e-4de1-959b-54f201a3bf2a
+63a86df5-225e-4a03-b20a-ef317a02d3a4	woke nice	2025-05-28 10:06:58.321	\N	e7cc9019-994c-431f-bf63-b110dcf6b276	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+ee75238e-141d-467a-8c86-be019e47db39	asda	2025-05-28 15:57:28.6	\N	4cb1dd26-6526-4f78-9034-aa2fe38c21e7	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+8e0a759c-1e50-4a76-9b71-6bd136076d33	asda	2025-05-28 15:57:29.177	\N	4cb1dd26-6526-4f78-9034-aa2fe38c21e7	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+64893376-8c32-470c-ad97-4d5d89af9668	Mantap	2025-05-28 20:24:06.519	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+ccb8f220-24cd-4148-9cf8-56b1ea5a41c9	testing	2025-05-28 22:12:03.09	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+073d26ac-6c41-4175-ae42-9856b7440052	tess	2025-05-31 21:19:38.002	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+536346fc-424e-43d7-bbbd-8ab8d1c6e927	testing	2025-05-31 21:19:41.897	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+649ba99c-771e-4a04-8cba-7d3f25fef05e	Keren ini bang aplikasinya	2025-06-01 19:30:04.687	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+a675c75c-4687-4700-9ede-9e4ecfe90d66	mantap	2025-06-01 19:30:10.51	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+ae046584-e2b7-4fe1-9dd4-ae074b9d1abe	mantap coyy	2025-06-01 19:30:54.39	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+1598d355-f262-42b3-b7e1-cc8c16777d72	mantap	2025-06-01 19:34:21.788	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+ce1cb9bb-579a-4a61-8706-7d2503f1b105	oj	2025-06-01 19:35:19.679	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+c776ae3f-3a01-451f-ba32-23f8597b018c	Mantap	2025-06-01 19:35:32.896	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+34ad9dc8-e55e-41fc-95a6-bda821bb3646	testing cuy	2025-06-01 19:36:53.311	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+e99dcb8b-ff7a-4c81-a7c6-555813ae1323	10	2025-06-01 19:38:02.186	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+db469fb4-0cca-4357-95ab-cd2f33f00052	mantap	2025-06-01 19:39:42.626	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+40fac1a2-f87c-4b47-9e26-b1ecc7cf0db2	kelas cuy	2025-06-01 19:39:47.08	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+d41c355a-74ff-4bd0-8722-6cd949b3710a	keren	2025-06-01 19:45:54.336	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+7666cfec-7e26-4fc4-bb2b-a50140b4a3c7	keren cuy	2025-06-01 19:45:58.617	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+cd072ca3-7557-45e4-b80c-3c8b42eb9625	hebat	2025-06-01 19:46:04.014	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+92cea0df-6338-4c11-823f-e0c603b8e964	tahnia	2025-06-01 19:46:05.588	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+b96582c4-d6c0-4d9c-910b-d45a18b0adea	keren	2025-06-01 19:46:52.515	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+e7f3734b-b4f7-4014-89aa-3e5b90c7f81e	muantap	2025-06-01 19:46:54.636	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+a156d207-7229-4f57-8a25-91e9b6c73ed9	i	2025-06-01 19:46:56.192	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+e9a6d87a-f324-4b30-b1f6-101cbc0285fb	woke	2025-06-01 19:47:04.341	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+c71f627f-27a6-4fc4-975c-31bf62d3762a	woke	2025-06-01 19:50:34.066	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+ffd95e6a-f7b4-40b9-a64c-ce47614b7524	kelas	2025-06-01 19:50:37.311	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+29366a62-0a07-4637-98fc-0115a144a948	tes	2025-06-01 19:51:59.565	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+a88853da-be12-481e-adc5-7cd08c68906e	kerennn cuyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy	2025-06-01 20:14:40.047	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+fd142e66-2e7d-4a9e-8f28-a02b9cb56e84	EH gimana dah cara jadi jagao dengan bermian gamemee gw bingung banget bjir	2025-06-01 20:14:52.66	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+b097472d-3168-4c2b-81eb-cbc8c6b5b1c2	kelas cuy	2025-06-01 20:31:06.904	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+5dc78177-a207-4997-b9bd-210ff7ee5944	mantap	2025-06-02 06:56:59.898	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+b2fd26da-b03f-4030-9e61-3706fd7e13b2	mantap	2025-06-02 07:02:46.858	\N	5a782a29-2a18-4c2f-895e-cc70987b5684	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+9e1bd92f-80c2-4323-b384-10b265cbdf1e	kerne 	2025-06-02 07:02:57.5	\N	c8deae4e-f25b-4002-bef9-21058bd2bae8	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+5b550d6b-8506-4e1c-92db-66cf5e265dfd	kelas	2025-06-02 09:58:28.778	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+89d43010-311b-4c98-9ae7-1c86d92e8235	keren bang	2025-06-02 18:07:45.047	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+b6f75dbc-73ed-46fc-8348-fb3eb16b229c	Ini adlaah password baru	2025-06-02 18:08:48.116	\N	2c401b22-83ea-4ff3-a977-a4cfbae8f5d3	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+d1b1fddf-bf02-406d-8b5d-33840ee3a069	keren	2025-06-02 20:19:25.968	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+e5235b6e-5c50-472f-9756-ac93e2e13579	OK	2025-06-02 20:19:51.632	\N	922b0dfd-1193-4f06-ac7d-d977efb036b5	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+14901b49-8465-4e65-97d5-4da57d8bec2c	oalah gitu	2025-06-03 08:31:31.832	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+4303b90d-e22f-4df9-8593-95d4e6c2c570	testing	2025-06-03 16:49:01.804	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+34e6834d-a96b-4b8a-8f4a-b5b26c9a546f	testing	2025-06-03 20:38:01.039	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+682ab571-c0a0-4eae-ab35-db6d3cf5faa3	aja	2025-06-03 20:38:07.022	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+a294ab41-e68c-49be-99bb-8f119b87de2d	gg banget coyy	2025-06-03 20:41:27.805	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+b00bd234-66d3-446a-9be8-d05ff1223c85	testing	2025-06-03 23:02:51.298	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+db722b72-3624-4968-af48-a87e38db29a4	mantap	2025-06-03 23:02:55.574	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+f26a6117-9c28-482e-af16-c97c4dd9e945	mantap cuy	2025-06-04 00:23:59.398	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+2bd0d29a-f875-4feb-a9b5-626971d9a02c	test	2025-06-05 00:43:46.301	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+83854362-a4a3-4f7b-a07c-19c5e4865483	mantap	2025-06-06 19:00:05.596	\N	3a8b7536-8308-4d10-8233-e46caa30067c	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+7cd54c16-3792-4850-bb0b-1234f8f1b794	tes	2025-06-06 19:03:14.185	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+26021a9a-f0c3-47bb-8769-f469eb770083	TES	2025-06-06 19:04:16.099	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+f66c1a1e-0c36-4e9c-976a-25e048c106cb	testing 1	2025-06-06 19:04:19.619	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+ea96ef26-28c7-405e-8701-970e531a170e	tes	2025-06-06 19:05:29.649	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+5056efe4-98f6-4fc6-a289-83f8c38a4ff3	tes	2025-06-06 19:09:17.361	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+9eb35854-eab4-4b62-8080-4db7d0b85775	asda	2025-06-06 19:09:19.912	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+9ea5c5e7-b1d5-46ed-ad9e-f68cf0b1d0c1	tes	2025-06-06 19:09:28.325	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+f65ffba2-11f6-4320-b26d-9d2089a553c2	asd	2025-06-06 19:09:29.538	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+6a36c563-107d-4974-8782-168ad95950c2	tes	2025-06-06 19:09:51.955	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+b61aa3cc-644a-4ae1-8f76-f829e3c747db	AASDA	2025-06-06 19:09:53.898	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+6887ae0c-ebf7-4b71-aaed-3ec7b9c363d4	AS	2025-06-06 19:09:57.079	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+1307564e-29c3-4f76-b4ff-19b9380bc649	asda	2025-06-06 19:11:49.79	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+f22134d0-4d8f-4d4b-a891-41e34b39bd86	asdasd	2025-06-06 19:11:55.674	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+60665cd8-7835-4339-b174-342962838aea	a	2025-06-06 19:12:00.059	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+bb0d1823-c831-48fe-83eb-05d6b77b900a	a	2025-06-06 19:12:00.413	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+b7f26b81-4f96-4e1d-b0f7-06b9b7c42471	a	2025-06-06 19:12:00.698	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+70664aa8-cca9-4a0d-aa4f-8207b10c0076	te	2025-06-06 20:21:20.689	\N	3eace596-8c43-49b6-969c-eb22d4f7e094	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+5399530e-5523-4195-b4a8-f8cee11ad530	tes	2025-06-06 20:21:25.147	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+a21b9a7e-fff0-4b85-8ba7-c119432929e3	es	2025-06-06 20:21:27.064	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+8d8b1412-f75f-4a16-a56e-c1e7f1c9cad0	es	2025-06-06 20:22:28.19	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+b9a27391-f831-4a20-bea6-4fce43f34507	s	2025-06-06 20:22:29.912	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+085be253-838d-4b0b-9ac1-ffbe8dbf6571	tes	2025-06-06 20:23:03.474	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+9d6e512c-7a70-439c-80bb-0f788416c157	a	2025-06-06 20:23:11.979	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+6ff702a6-c3e4-4109-9c0a-45a18361c6e9	tes	2025-06-06 20:24:00.032	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+85815062-9724-46e8-bd85-9046871cfa69	testing aja dlu	2025-06-06 20:24:03.725	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+f98ed6bb-9b22-424e-8099-e9ed063c0003	halo tes dlu	2025-06-06 20:24:26.357	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+a14570fe-89ee-4840-90ff-aefb8d79e26d	tes dlu	2025-06-06 20:24:29.587	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+6e45cb9d-0d62-49d5-8651-2c1224af6105	tes	2025-06-06 20:24:31.581	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+4c2f3359-75b6-4642-9c4f-51c7a8233902	tesing	2025-06-06 20:25:55.632	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+dc3b715b-7697-4a5b-a368-67ebdbcd6a87	tes	2025-06-06 20:26:56.415	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+b86fad03-d5c3-4b85-ab41-4f580277218a	asd	2025-06-06 20:27:22.34	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+892a91c0-e493-4922-91a7-bc09dd8ee848	asd	2025-06-06 20:27:23.88	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+5acc8bdb-0813-42ab-a973-5fd517c1e8a8	a	2025-06-06 20:27:27.269	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+03b555f5-80ba-4ac7-8419-2084fb3df22f	masuk	2025-06-06 20:27:47.901	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+e79c31ff-db35-477b-9ff4-7a9eeb7ce005	masuk	2025-06-06 20:28:04.162	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+a714d662-318e-406b-9165-a2fcae0fd3fb	tes	2025-06-06 20:28:31.697	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+5a200b8f-6e7a-42ae-a5b1-6db882ba7901	tes	2025-06-06 20:28:34.724	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+83046218-4589-41fe-a952-d7732960d0ac	wrwfw	2025-06-06 20:28:36.629	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+4a18eab0-da07-4694-b8e3-ba9c09e7d31b	tes	2025-06-06 20:29:00.307	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+28fc2f53-bccb-4728-8a61-2ab7808ec749	mas	2025-06-06 20:29:18.725	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+7ed3fb4b-88b7-4355-8e3b-83d7add98f60	masuk pak ekok	2025-06-06 20:29:21.315	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+a0492df0-fa8a-436c-9f4f-7f7f22d0105a	mantap bang	2025-06-06 20:32:27.801	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+cec78c1c-0125-4b62-821b-204cc245a79a	testing aja	2025-06-06 20:35:26.484	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+645cb2d8-ac9b-4e21-adde-786b3c4b386a	mantap bjir	2025-06-06 21:24:38.721	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+30e1a09f-2e65-4656-b205-55d3b9316abf	tapi boleh jjuga sih	2025-06-06 21:24:43.487	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+63d6ca31-32f6-41b5-a024-a7b6aedb6ad8	kelas	2025-06-06 21:24:47.947	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+104856f6-7092-413e-b43b-7c5b46209aaf	tes	2025-06-06 21:24:55.32	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+87bd1a67-288a-4b97-8f1b-41c22f03c507	testing	2025-06-06 21:25:14.49	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+74505677-e6e4-4835-b931-34430db2e075	test	2025-06-06 21:25:41.069	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+9057d9ba-da1f-4a30-9457-ca124fa5f7b2	testing	2025-06-06 21:25:43.32	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+401b6985-88fb-4123-8629-bab171b27464	testing	2025-06-06 21:25:49.888	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+c9c393ef-fc76-44b5-b7e9-f554d0cd9c7e	co	2025-06-06 21:25:53.601	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+742b4328-95de-4228-8bfb-95ef2d53903f	mnatap bjir	2025-06-06 21:26:01.832	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+9b1030c8-aec1-4c73-9d5e-a1d550319eee	ok	2025-06-06 21:26:10.471	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+8564f38f-e7c0-47c8-bfc2-1ebf4f8cc0c4	kelas	2025-06-06 21:26:11.259	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+6b7a1702-b90f-4d76-ae7a-2368e2a7ac58	juga	2025-06-06 21:26:12.562	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+c718922e-d11c-41b3-84fd-c745558f7d89	testing	2025-06-06 21:26:15.499	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+542270bc-9e5d-4c67-b14a-2c4f8950d365	kleas	2025-06-06 21:26:21.408	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+aaaa3c00-57dd-427f-8bae-02bb993ead17	cuy	2025-06-06 21:26:22.519	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+ea7b4fb5-6608-432c-b362-6c440aac3455	infokan	2025-06-06 21:26:25.163	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+cac8211d-5b68-4399-aacf-66cfe84d0a33	gimana	2025-06-06 21:26:27.075	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+a280c15c-c689-4d95-9af2-dcf268cba226	caranya	2025-06-06 21:26:29.21	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+91dae9ef-cf04-4735-af51-332f82236753	test	2025-06-06 21:29:54.656	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+4d186999-720b-419d-8868-b823d65b0fc4	gimaa	2025-06-06 21:29:56.606	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+39dd7117-afff-4b83-beec-b4124293a061	caranya	2025-06-06 21:29:58.764	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+0102d718-b928-4faf-aead-1884ee04b7ff	lho	2025-06-06 21:30:06.074	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+d5fc3761-afd1-48f7-b553-6cc910a9b233	kok	2025-06-06 21:30:09.609	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+9185d4bb-8c93-4863-affd-c57116a4bb93	bisa	2025-06-06 21:30:11.882	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+cae39532-a87e-4fb3-8ec7-186605a57b2d	kok	2025-06-06 21:30:17.333	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+73eb4e17-f590-4abd-ae2c-51c1709aa4c1	oke	2025-06-06 21:30:45.446	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+ed4af1a8-7966-4c8f-a507-ac6aabbebfe2	dah	2025-06-06 21:31:09.579	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+f04a19f3-fea6-4441-9fd6-3e5548cc2274	test	2025-06-06 21:31:57.787	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+a1e199db-1479-4830-bbcf-cbee17ab2da3	testing	2025-06-06 21:32:04.556	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+2adc1dec-6100-484f-b2ec-7c00b6d044fe	cuy	2025-06-06 21:32:40.887	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+a94d3fd4-5d0a-4cf8-bcd5-0362357de1ba	testing	2025-06-06 21:32:57.126	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+5e0a728e-c834-48ac-b0f7-29b11e7bcf0f	kalo bisa bilang	2025-06-06 21:33:02.28	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+bc4f7100-e0af-47c7-ad97-aa66e13c229e	kalo bisa bilang ya	2025-06-06 21:34:02.871	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+9d3cf9f3-0e01-4dc5-95bc-a6a44b3a8e1c	tapi 	2025-06-06 21:34:05.099	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+881a72dc-a022-40ac-99ac-3c76b5a33f7f	kagak	2025-06-06 21:31:00.067	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+9bfaf990-66cc-4c36-9594-829b1d707757	jelas	2025-06-06 21:31:01.911	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+18de71f6-7373-4238-b77a-721e43214fa3	banget	2025-06-06 21:31:05.809	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+383cf352-ea25-45af-b9b5-da5bae745fb0	bisa ga	2025-06-06 21:32:44.467	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+aa34e218-ca58-446a-a1a3-285d88e90025	kalo mainnya agak nantian	2025-06-06 21:32:49.252	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+1b986bc5-f2ec-4b8b-9bde-b25a6f9585c4	aja	2025-06-06 21:32:59.377	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+9f97761e-6f98-46b1-81c2-c8b8c2427a7b	oke bagus	2025-06-06 21:33:59.765	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+e2e47267-ff25-4965-b2cc-7d295b1c344c	te	2025-06-06 21:34:03.563	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+d0d7e693-94d1-4486-9daf-3d7a0700935a	ini juga agak susah sih	2025-06-06 21:34:08.332	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+985346aa-d261-4c6d-b079-269aad719919	ok	2025-06-06 21:36:36.603	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+ef1994b0-8e8e-4542-9f93-99d0ea69619a	boleh juga sih	2025-06-06 21:36:38.648	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+85789ef2-f937-43fe-803c-3bb13e432d77	tapi saya pengen yang lebih hard	2025-06-06 21:36:42.12	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+be291c36-f751-4088-82bc-4fbb3eed6caa	apa tuh bang	2025-06-06 21:36:44.665	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+2f5e3b20-0c4c-4259-b5fa-1afde8a754d8	tes	2025-06-06 21:40:00.105	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+0c302378-67f2-45ef-a8db-16d935e0f4a9	tes	2025-06-06 21:43:46.073	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+8a38313e-dd6a-495c-a01c-9e307018b068	mantap	2025-06-06 21:43:49.163	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+3c384038-f214-4cbc-b950-fc23e1c15998	ok	2025-06-06 21:44:57.195	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+b0e799e7-b2e4-4520-b070-8e6307ec5eb2	boleh	2025-06-06 21:45:03.975	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+250060fc-a365-4afd-8787-51c7052af4ca	tes	2025-06-06 21:45:56.748	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+aa5751ef-59c8-4886-9411-a9c5df08f571	testing aja	2025-06-06 21:46:08.454	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+bbae814f-1867-4bb7-951f-83385af111fe	tes	2025-06-06 21:47:45.208	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+8707301b-b1ad-4bee-9ba5-2f264da5d55a	mantap	2025-06-06 21:54:03.864	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+962a9cbb-a57b-4d19-ad31-da1102bfef4e	oke	2025-06-06 21:54:06.633	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+9f8eebae-816d-4a43-8ada-1f72c29fd613	boleh juga sih	2025-06-06 21:54:11.158	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+55f9741b-1e1a-48de-8112-a5afd78998a4	asli gg 	2025-06-06 21:54:33.457	\N	3a8b7536-8308-4d10-8233-e46caa30067c	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+07752a17-0084-49b5-adb4-c5e0f154cb82	tapiboleh jugasih	2025-06-06 21:54:36.251	\N	3a8b7536-8308-4d10-8233-e46caa30067c	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+d3f6a326-f7ef-4f57-9902-f295ca794ccf	tapi gimana caranya ya	2025-06-06 21:54:42.467	\N	3a8b7536-8308-4d10-8233-e46caa30067c	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+db3294dd-1706-4afa-96f0-7fccd8e9b88d	bisa gg	2025-06-06 21:54:43.877	\N	3a8b7536-8308-4d10-8233-e46caa30067c	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+102023e7-da15-47a5-9258-39844d1e73a0	 kayak gitu	2025-06-06 21:54:45.49	\N	3a8b7536-8308-4d10-8233-e46caa30067c	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+dfc1fa8e-ea7b-42d5-9cdd-69e13def198a	pengen dah	2025-06-06 21:54:47.936	\N	3a8b7536-8308-4d10-8233-e46caa30067c	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+194d6670-d541-4f6f-b746-4f4d411f73a3	iya sih	2025-06-06 21:54:49.177	\N	3a8b7536-8308-4d10-8233-e46caa30067c	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+5253f8c5-d051-4982-9137-21a0b761f374	pengen cukk	2025-06-06 21:54:52.645	\N	3a8b7536-8308-4d10-8233-e46caa30067c	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+bd59e61a-05e7-453e-b5c0-df8ee3b6acad	keren coy	2025-06-06 21:55:09.157	\N	3a8b7536-8308-4d10-8233-e46caa30067c	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+9688da57-f9ec-42b7-8170-1c65d6eaa488	gg coy	2025-06-06 22:04:39.778	\N	3a8b7536-8308-4d10-8233-e46caa30067c	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+9bbe1b2e-08af-4982-b538-eb9b7d98c65a	mantap sih ini coy	2025-06-06 22:09:21.005	\N	3a8b7536-8308-4d10-8233-e46caa30067c	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+d565c239-ec84-4617-b952-11115dbe6a19	keren	2025-06-06 22:09:25.038	\N	3a8b7536-8308-4d10-8233-e46caa30067c	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+695fc32d-46db-49c8-8a50-187b7d8e347f	keren brow	2025-06-06 22:09:30.227	\N	3a8b7536-8308-4d10-8233-e46caa30067c	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+d6f8a951-07f5-4eac-9826-9e276334977f	keren coy	2025-06-06 22:09:36.892	\N	3a8b7536-8308-4d10-8233-e46caa30067c	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+ab58a63c-94c1-4c92-a596-3b20f013e9f3	keren juga coy	2025-06-06 22:09:52.579	\N	3a8b7536-8308-4d10-8233-e46caa30067c	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+88267102-7ab2-4e9d-975f-cbb1f5327f48	kelas bjir	2025-06-06 22:12:42.422	\N	3a8b7536-8308-4d10-8233-e46caa30067c	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+c57d3561-72ac-4b03-b961-5b1d991183f3	kelass cuy	2025-06-06 22:12:48.847	\N	3a8b7536-8308-4d10-8233-e46caa30067c	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+c76173e7-4f0c-4b95-b86b-dd3fa971649d	oke deh bagus juga	2025-06-06 22:12:54.235	\N	3a8b7536-8308-4d10-8233-e46caa30067c	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+14694fc9-ef0a-45c4-b3c9-b579bbe1733f	oek	2025-06-06 22:13:44.083	\N	3f26cedd-e248-404a-b160-40ee4f4b2e69	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+ba228a2f-922f-4a97-bf73-5b9ed95a9246	tes	2025-06-06 22:13:47.447	\N	3f26cedd-e248-404a-b160-40ee4f4b2e69	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+8ca93ff7-5d07-4102-b2d3-df38621f77de	bole	2025-06-06 22:13:51.433	\N	3f26cedd-e248-404a-b160-40ee4f4b2e69	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+0cfd2baf-ed7f-4783-82f0-3475646184d6	nice	2025-06-07 07:15:51	\N	ad7d0837-da64-47f1-8827-8964954475fe	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+1d79ac84-7c27-4b5c-becf-7f996db1f07f	woke	2025-06-07 07:15:52.759	\N	ad7d0837-da64-47f1-8827-8964954475fe	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+bba701e5-e673-46f6-b357-b22ef7333e8f	boleh juga sih	2025-06-07 07:16:00.593	\N	3a8b7536-8308-4d10-8233-e46caa30067c	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+8dc9b27e-c90d-48a2-af34-f99c3738cf93	nice	2025-06-07 07:17:40.654	\N	3a8b7536-8308-4d10-8233-e46caa30067c	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+7b550c65-9ee7-4f7c-9219-69a364553883	niceee	2025-06-07 07:17:47.823	\N	3a8b7536-8308-4d10-8233-e46caa30067c	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+a85f9a4a-1ce2-4520-b4ab-daacec098fe5	gas	2025-06-07 07:17:50.473	\N	3a8b7536-8308-4d10-8233-e46caa30067c	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+a6f48d82-13d2-4e69-b7af-d6fd2456c019	Mantap	2025-06-07 07:40:16.265	\N	f1595d86-c6ae-4e2f-a1e2-e18020cfcc0d	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+7d3c7c86-485e-4a1c-b857-69b924d8ce56	etst	2025-06-07 09:19:47.864	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+558dd250-c1d4-42eb-b602-89fedd593331	test	2025-06-07 09:43:43.578	\N	3a8b7536-8308-4d10-8233-e46caa30067c	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+02036ed3-876a-4e49-add8-e35b4ba202be	Nice	2025-06-07 10:14:13.23	\N	74d9dd35-4725-4cb4-9749-e54c6a2175c3	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+59ed2acd-aadf-4db7-b012-a748baf52660	Testing	2025-06-07 10:14:20.866	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+64887c2c-2e46-4708-a0ff-d93327b56fb7	boleh jugasih	2025-06-07 10:14:22.595	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+26aed406-d157-4659-9e3c-0af6b411623a	nice	2025-06-07 16:19:17.714	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+1b801c01-ca1b-470d-9757-5849f7eadea8	testing	2025-06-07 16:19:20.817	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+0aa261a0-48cf-4678-83f2-aeba4c3cf718	woke	2025-06-07 16:19:24.606	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+9b64adb6-9cab-4f30-a1c4-903d1bf409a7	nice	2025-06-07 20:08:35.604	\N	2c401b22-83ea-4ff3-a977-a4cfbae8f5d3	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+f885f5fc-976a-49fd-9c27-f53d0d579d71	hello guys	2025-06-07 20:08:42.211	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+41ab24a6-3c12-48bf-9fdf-03e4ea91f093	tes	2025-06-08 00:37:04.478	\N	3a8b7536-8308-4d10-8233-e46caa30067c	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+02a8dffe-a588-48df-9814-efb6152685ed	test	2025-06-08 01:37:04.411	\N	3a8b7536-8308-4d10-8233-e46caa30067c	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+7862aea8-5868-4a77-89b7-03368af73853	test oke	2025-06-08 01:38:40.348	\N	3a8b7536-8308-4d10-8233-e46caa30067c	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+d5af9152-808c-4690-b619-e1c5792ccd67	test	2025-06-08 10:40:29.774	\N	3a8b7536-8308-4d10-8233-e46caa30067c	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+a94336e2-53ee-42f3-8a36-c2cc61772669	kelas	2025-06-08 10:41:01.884	\N	2c401b22-83ea-4ff3-a977-a4cfbae8f5d3	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+de6bec80-ae00-4bb5-8317-00b695786255	gas	2025-06-08 10:41:12.35	\N	2c401b22-83ea-4ff3-a977-a4cfbae8f5d3	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+d1d81d23-ad55-4af6-82cb-5f5afd90ab31	nicee	2025-06-08 10:46:05.624	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+4e3aab4e-e3c1-40c6-a42f-ccff4b2b15dc	nice	2025-06-08 10:48:09.488	\N	ad7d0837-da64-47f1-8827-8964954475fe	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+123945ab-1ff5-4a74-a1b6-6bd7908e5f0b	nice	2025-06-08 10:49:53.227	\N	3a8b7536-8308-4d10-8233-e46caa30067c	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+058ded40-b885-4461-b1b0-6b521b20a9aa	tes	2025-06-08 10:51:45.446	\N	3a8b7536-8308-4d10-8233-e46caa30067c	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+1e733ece-9a37-45fb-9222-4c9a622d6002	test	2025-06-08 11:56:58.018	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+3fa0fee8-05b2-48db-bcac-110b33ffd2ae	itsgood	2025-06-08 11:57:02.714	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+dc9b281d-04c7-4ba1-86e3-96fe73fc535e	nice	2025-06-08 11:57:04.146	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+36b8dcf2-51f6-44fb-9426-865ad2fd2a60	asda	2025-06-08 11:57:05.488	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+8109f498-9436-4ad7-ae91-b8071de1a717	test	2025-06-08 11:57:38.52	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+ff9c331a-12de-40d9-88ea-ca015a710ca2	testing	2025-06-08 11:58:26.741	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+0650d35c-a898-405f-b561-55bb5db6ba76	test	2025-06-08 11:58:49.392	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+7bef235c-3527-4899-8f83-7d2b20793e29	testing part 2	2025-06-08 12:37:00.59	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+3b2ee747-e15c-4c39-85de-f0c6f88ea91d	testing	2025-06-08 12:37:39.598	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+c0ef26b1-a7da-4f73-9a92-66e13485b4dd	a	2025-06-08 12:37:40.501	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+6763fd70-a5c7-4ae3-a34a-48958b35178b	test	2025-06-08 12:38:53.391	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+ee339ccf-d71b-4af5-9945-1d4292514cb7	test	2025-06-08 12:39:09.511	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+c62a0c5e-0aa3-4b96-9a3f-0862aeefb6bd	hello	2025-06-08 12:39:12.542	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+8569a1df-c6ee-41e9-bc90-d90caa88bb32	hey guys	2025-06-08 12:39:17.505	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+c27a967d-3e07-4f1e-a0ab-139cba8bd655	testing	2025-06-08 12:39:44.863	\N	3a8b7536-8308-4d10-8233-e46caa30067c	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+b7492d73-e330-4994-8cf4-6292c5be5ee4	nice	2025-06-08 12:39:46.133	\N	3a8b7536-8308-4d10-8233-e46caa30067c	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+e3405e45-b849-4f40-a3c2-ff2f837f3399	okay	2025-06-08 12:39:47.07	\N	3a8b7536-8308-4d10-8233-e46caa30067c	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+9add6236-23fa-4bba-bcbf-ae3770966236	testing	2025-06-08 12:41:30.388	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+52b9a24b-86aa-4462-99c4-1b18c2bfe57d	bro	2025-06-08 12:41:32.272	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+4c1275d5-4f5a-42d9-99c5-675fe1088802	you know how to do ?	2025-06-08 12:41:35.903	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+6a0b98c8-59af-4cb6-8bdd-cfd7319d877d	test	2025-06-08 12:42:11.95	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+62d6ada2-4f57-4dd6-98a6-dbe5cfcae279	bro	2025-06-08 12:42:14.61	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+e7daa71a-e9c9-4b1a-a067-e0519e60372a	how	2025-06-08 12:42:16.644	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+0c3dc32d-c8fd-4492-9baa-6eb7fcf3c469	okay	2025-06-08 12:42:18.252	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+b2278bbb-4c35-4147-8208-42dda9a1f48d	but	2025-06-08 12:42:20.489	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+6f288ad7-9119-4665-8b59-7760de675f7c	hei	2025-06-08 12:46:41.956	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+d1e50bc6-2bfc-4dd3-b5a6-3c931fe8810e	helo	2025-06-08 12:46:48.817	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+2d88d1b3-e2de-428d-bd61-e89cff21eb3e	guys	2025-06-08 12:46:49.403	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+b5a04000-5633-4563-bc8c-096ef80c05d3	my name is 	2025-06-08 12:46:50.926	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+7bc9ac31-6a02-48ab-8085-42bb10f4c2b1	test	2025-06-08 12:47:24.666	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+803ccda1-2e54-4215-9235-49fed3833f1d	aight	2025-06-08 12:47:28.181	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+3bdfb857-eb01-4566-b49a-f8b31a6419bd	a	2025-06-08 12:47:30.175	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+17f116c7-60fe-4b4a-b85b-8b8346660a8c	nice	2025-06-08 12:47:38.732	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+7c0586a1-c303-43e0-8189-e257c1b14ac1	TES	2025-06-08 12:48:56.674	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+f56bd890-2327-4c3c-845b-8ad2e247f25a	tes	2025-06-08 12:50:32.63	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+68c61e77-ae9b-49f1-9b0a-c27b2c54b7bc	A	2025-06-08 12:50:34.709	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+ad3bf2ef-9571-48cb-be84-2510011ae48a	ASDA	2025-06-08 12:50:35.984	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+6959cf05-7e2d-4cd1-97ae-eb340ee18e47	ASDA	2025-06-08 12:50:36.659	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+b0836ec7-e012-4fa3-a103-3db8607ac19a	HEI	2025-06-08 12:50:46.761	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+7d83cb2c-727f-47d8-abb4-66107c39b74e	nice	2025-06-08 12:50:47.607	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+f35b1d15-7a7c-4c32-9583-fae2c9623601	ok	2025-06-08 12:50:48.567	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+469b5c38-2610-41eb-8203-720dbeb76597	nice	2025-06-08 12:50:50.968	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+4394adc6-e7f8-4787-b6cc-420711d0e84d	oka	2025-06-08 12:50:51.88	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+0ebdcbb7-abb3-4631-9000-fcb3b6cd5f48	hello	2025-06-08 12:51:08.064	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+ef15ed43-fc67-4567-8e38-fbdde4018e6a	nice	2025-06-08 12:51:09.256	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+02639977-bfba-4d70-9267-9c5453ba63be	testing	2025-06-08 12:51:13.853	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+cbc71387-92b4-4a20-b3ad-da2812b0e38a	okay	2025-06-08 12:51:15.066	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+51c4ecb1-4c27-4297-8416-4fbb26f6e5a8	nice	2025-06-08 12:53:12.909	\N	3a8b7536-8308-4d10-8233-e46caa30067c	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+021881e4-961c-4e34-ad5d-59a61482fc6c	okay	2025-06-08 12:53:14.394	\N	3a8b7536-8308-4d10-8233-e46caa30067c	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+58237808-24a2-4767-9049-e83e51f3c6ea	pretty good	2025-06-08 12:53:17.361	\N	3a8b7536-8308-4d10-8233-e46caa30067c	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+7eff12d8-6f65-49ee-96a6-0218ceee46ee	okay	2025-06-08 12:53:56.31	\N	3a8b7536-8308-4d10-8233-e46caa30067c	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+047faf43-74d6-4194-a370-05f90ffad9e2	nice	2025-06-08 12:53:56.942	\N	3a8b7536-8308-4d10-8233-e46caa30067c	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+1d5a8dae-c668-4bf7-adc1-0396689c9bb6	to meet you bro	2025-06-08 12:53:59.689	\N	3a8b7536-8308-4d10-8233-e46caa30067c	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+ea1c822d-453e-4b0e-ab69-96a4e6936d8c	nice	2025-06-08 13:25:38.738	\N	3a8b7536-8308-4d10-8233-e46caa30067c	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+f08971c8-0348-482f-80d7-62424de56ab7	test	2025-06-08 13:26:37.013	\N	3a8b7536-8308-4d10-8233-e46caa30067c	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+cf78d98c-6b81-4090-aefa-07f8d8d0b8c2	nice	2025-06-08 13:27:13.16	\N	3a8b7536-8308-4d10-8233-e46caa30067c	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+c5424db9-22ce-48f6-9fbf-9801b9df68a2	hello guys	2025-06-08 13:27:14.775	\N	3a8b7536-8308-4d10-8233-e46caa30067c	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+5188e928-43fb-47f1-888d-4bad8df181d0	etst	2025-06-08 13:27:35.279	\N	3a8b7536-8308-4d10-8233-e46caa30067c	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+9159fd2b-efb1-493c-ba5f-c9a8ed0b6644	aight	2025-06-08 13:38:32.289	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+fb1cea71-6dd3-43d3-8c2f-98e470979254	thanks bro	2025-06-08 13:38:34.064	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+99f3f9e3-5dd3-4592-bfbb-24893bb6408d	Testing	2025-06-08 13:52:31.994	\N	3a8b7536-8308-4d10-8233-e46caa30067c	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+985cac08-6a9b-4843-bc35-fed0d15037df	nicee	2025-06-08 14:43:31.94	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+0985f522-bdd8-45d7-9856-1fd3153888f9	mantap	2025-06-09 12:05:39.984	\N	f1595d86-c6ae-4e2f-a1e2-e18020cfcc0d	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+0e868af0-37eb-4998-aed1-79afa767c092	oke	2025-06-09 12:05:41.227	\N	f1595d86-c6ae-4e2f-a1e2-e18020cfcc0d	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+b770a16a-c040-482c-aaa9-cc4dcd122e11	nice	2025-06-09 12:05:42.057	\N	f1595d86-c6ae-4e2f-a1e2-e18020cfcc0d	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+501cd507-2671-4a4b-ae3a-5e6ccd7f0f1b	nice	2025-06-09 12:05:42.84	\N	f1595d86-c6ae-4e2f-a1e2-e18020cfcc0d	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+8a4a8ea5-aaa4-40bd-905a-14d02b1381c7	boleh	2025-06-09 12:05:43.942	\N	f1595d86-c6ae-4e2f-a1e2-e18020cfcc0d	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+d2f4cfab-63f0-437e-adb3-fe593a795d34	juga	2025-06-09 12:05:44.572	\N	f1595d86-c6ae-4e2f-a1e2-e18020cfcc0d	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+933ee880-1178-4b80-b0d3-563653f311cb	test	2025-06-09 12:14:54.868	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+34c509ed-d39b-4554-8f21-362fad02126d	nice	2025-06-09 12:14:55.836	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+984f437f-3440-4e8a-83a6-e77621a1b762	test	2025-06-09 12:18:33.371	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+a89a724d-7c9f-4010-9030-f1dbc7bd9127	gas	2025-06-09 12:18:39.961	\N	4cb1dd26-6526-4f78-9034-aa2fe38c21e7	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+7303f48d-d88f-44ac-b1a2-8f106f367be2	nice	2025-06-09 12:18:55.763	\N	4f46ab23-cedd-4d4c-badf-373409af74d4	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+591ab37b-dc50-457d-b802-0cee0e98a177	test	2025-06-09 12:19:03.211	\N	3eace596-8c43-49b6-969c-eb22d4f7e094	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+0be30813-56b0-48c1-a05c-1dd94189b7a6	test	2025-06-09 14:06:13.912	\N	74d9dd35-4725-4cb4-9749-e54c6a2175c3	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+3a152b4c-9cfc-4974-a360-2f2e328005ae	test	2025-06-09 14:31:11.161	\N	3a8b7536-8308-4d10-8233-e46caa30067c	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+2c01c23f-f752-40ea-8c7a-e3dde542cf1b	testing	2025-06-09 14:31:17.39	\N	3a8b7536-8308-4d10-8233-e46caa30067c	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+da3a67eb-6677-4610-b120-4f9addbc6361	test	2025-06-09 14:35:43.984	\N	3a8b7536-8308-4d10-8233-e46caa30067c	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+55a644fe-6daa-41ff-8531-458bbb69bebc	nice	2025-06-09 14:35:45.307	\N	3a8b7536-8308-4d10-8233-e46caa30067c	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+a7e69e00-a9d0-4ad0-abe0-86ccf6fbc7df	keren bang	2025-06-09 14:35:53.979	\N	3a8b7536-8308-4d10-8233-e46caa30067c	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+db5aceb9-52c9-473a-b8a2-7e054b43dfc7	nice	2025-06-09 14:35:56.038	\N	3a8b7536-8308-4d10-8233-e46caa30067c	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+7cb8e8fc-bacd-4d37-b205-65ed51d89d2f	boleh jugasih	2025-06-09 14:35:59.528	\N	3a8b7536-8308-4d10-8233-e46caa30067c	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+58de9f85-c754-4eec-bb6e-cda628041ba7	test	2025-06-09 14:38:22.059	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+1f960793-6735-42ad-85e0-b4433dc535eb	nice	2025-06-09 14:38:24.897	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+c56068c1-c9aa-4b74-9aea-5e567e3006df	test	2025-06-09 14:40:52.348	\N	3a8b7536-8308-4d10-8233-e46caa30067c	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+cc726338-5a7c-4ccb-8828-258ec501329a	test	2025-06-09 14:57:32.173	\N	3a8b7536-8308-4d10-8233-e46caa30067c	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+b2f2a819-14bb-435e-9643-b03ec6578d61	est	2025-06-09 16:41:20.866	\N	3a8b7536-8308-4d10-8233-e46caa30067c	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+741a84b4-59a8-4d91-9c78-3a27d01cfc5b	hello	2025-06-09 16:45:26.996	\N	3a8b7536-8308-4d10-8233-e46caa30067c	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+dc3164d1-f864-4d15-92b6-2e96fb2bd33f	test	2025-06-09 16:45:35.161	\N	3a8b7536-8308-4d10-8233-e46caa30067c	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+d1f75f3f-7f52-4874-aa75-34b965b975e4	nice	2025-06-09 16:45:54.034	\N	3a8b7536-8308-4d10-8233-e46caa30067c	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+83527aa1-c6c7-4e31-955a-bc4fa2a3a474	tes	2025-06-09 16:51:31.676	\N	3a8b7536-8308-4d10-8233-e46caa30067c	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+c8c4e29e-9649-4bdf-a340-a1727a991ed5	nice	2025-06-09 16:51:33.609	\N	3a8b7536-8308-4d10-8233-e46caa30067c	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+0ca19700-3298-4650-b77f-d9f931eb1efa	tes	2025-06-09 16:51:53.19	\N	3a8b7536-8308-4d10-8233-e46caa30067c	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+511588e2-000c-4662-b3d9-5e8aed9858d1	TEST	2025-06-09 16:58:01.497	\N	3a8b7536-8308-4d10-8233-e46caa30067c	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+359cfac0-4f3f-4f42-90ad-1e65448e6efc	test	2025-06-09 16:58:03.155	\N	3a8b7536-8308-4d10-8233-e46caa30067c	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+2ff275d5-6c0f-49b5-a0d3-ddb09c0dad0a	test	2025-06-09 16:58:25.537	\N	3a8b7536-8308-4d10-8233-e46caa30067c	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+3eb38d58-4231-4271-a8c4-a385dedaa751	nice	2025-06-09 16:58:27.414	\N	3a8b7536-8308-4d10-8233-e46caa30067c	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+1d4fa879-4bc6-4ec8-8ce5-1c9c33230a1b	test	2025-06-09 16:58:40.874	\N	3a8b7536-8308-4d10-8233-e46caa30067c	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+7fe3219a-c4b9-47d2-9a46-d4df2fa2d601	as	2025-06-09 16:58:42.164	\N	3a8b7536-8308-4d10-8233-e46caa30067c	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+a1227bb3-e8cc-4149-b070-98b05101a420	as	2025-06-09 16:58:43.267	\N	3a8b7536-8308-4d10-8233-e46caa30067c	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+85f3c030-68bd-49d5-94db-8ba19cf51cbe	aight	2025-06-09 16:58:45.206	\N	3a8b7536-8308-4d10-8233-e46caa30067c	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+7b8f04cb-5fc8-4699-a064-5b0d8b4b991c	okay	2025-06-09 16:58:46.037	\N	3a8b7536-8308-4d10-8233-e46caa30067c	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+4fc78bf6-6cbf-4e4f-b1e2-097274f9b211	test	2025-06-09 17:04:49.501	\N	3a8b7536-8308-4d10-8233-e46caa30067c	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+29f76bc9-f217-4fd8-a73c-e36bb915fca3	asda	2025-06-09 17:36:08.602	\N	3a8b7536-8308-4d10-8233-e46caa30067c	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+b1f56ca7-46ab-43ed-959e-ed2269126132	nice	2025-06-09 17:36:42.048	\N	3a8b7536-8308-4d10-8233-e46caa30067c	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+b431a57d-5f22-4a9e-b743-ed0ba353af9c	test	2025-06-09 17:36:48.598	\N	3a8b7536-8308-4d10-8233-e46caa30067c	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+b7f4b6ca-763b-4acc-b761-29f498cbd4d5	oke	2025-06-09 17:48:09.491	\N	ad7d0837-da64-47f1-8827-8964954475fe	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+0cca0d44-e431-45d5-9035-49f5904a48d1	nice	2025-06-09 17:48:10.413	\N	ad7d0837-da64-47f1-8827-8964954475fe	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+c937255c-63e9-4b9f-b0c7-759c2f298b2d	nice	2025-06-09 17:55:07.718	\N	3a8b7536-8308-4d10-8233-e46caa30067c	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+acb12bef-6352-4c20-945f-286d4dbedc9e	okay	2025-06-09 17:55:13.172	\N	3a8b7536-8308-4d10-8233-e46caa30067c	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+aeec7c08-2bc8-4bbe-ba15-bf5150c4e1e0	right	2025-06-09 17:55:15.468	\N	3a8b7536-8308-4d10-8233-e46caa30067c	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+08a077ee-850a-4513-ac8c-bfdae50d301c	tes	2025-06-09 17:55:46.758	\N	3a8b7536-8308-4d10-8233-e46caa30067c	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+6c1a67a4-ac13-4af8-b988-a487390b6446	nice	2025-06-09 17:55:48.481	\N	3a8b7536-8308-4d10-8233-e46caa30067c	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+d5e5f6e1-819a-4ef6-903d-b3be876099eb	bisa ini	2025-06-09 17:55:49.82	\N	3a8b7536-8308-4d10-8233-e46caa30067c	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+8c11f948-9ee1-41ea-bf6c-cc150e8b6564	nice game	2025-06-09 19:14:53.779	\N	3a8b7536-8308-4d10-8233-e46caa30067c	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+12b4ee58-b6fd-459a-b7e1-4fd539d98f30	nice	2025-06-09 19:14:57.367	\N	3a8b7536-8308-4d10-8233-e46caa30067c	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+d3b2d5ea-b106-4235-aa40-57fa9f5b6877	cuy	2025-06-09 19:14:58.154	\N	3a8b7536-8308-4d10-8233-e46caa30067c	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+e438110c-9749-4f31-a09e-6f60bc4d6034	lets go	2025-06-09 19:14:59.4	\N	3a8b7536-8308-4d10-8233-e46caa30067c	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+ec03c4fb-5f50-4e3b-84e4-7e4a64752c51	nice game	2025-06-09 19:15:31.305	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+5a25a963-6cb3-4f34-adb3-d1107d9e5818	nice	2025-06-09 19:17:15.204	\N	3a8b7536-8308-4d10-8233-e46caa30067c	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+a2b28369-7543-45a3-bb5f-a3d878d31be3	this is good	2025-06-09 19:17:19.367	\N	3a8b7536-8308-4d10-8233-e46caa30067c	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+51e47321-8d90-49af-9d86-36b96300e18a	nice geys	2025-06-09 19:19:25.773	\N	e7cc9019-994c-431f-bf63-b110dcf6b276	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+1172b733-12bc-49eb-a8a8-695ad88c26a5	this is lit men	2025-06-09 19:19:30.317	\N	e7cc9019-994c-431f-bf63-b110dcf6b276	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+0747d03a-4ae5-4415-95dc-37d4feca13e3	nice see	2025-06-09 19:19:31.857	\N	e7cc9019-994c-431f-bf63-b110dcf6b276	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+5a70cd92-03f2-4086-9081-b391e0889e72	you guys are ass	2025-06-09 19:19:34.708	\N	e7cc9019-994c-431f-bf63-b110dcf6b276	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+39b02e41-f190-4ecc-8e93-9edbae6178e3	what the hell	2025-06-09 19:19:36.646	\N	e7cc9019-994c-431f-bf63-b110dcf6b276	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+3c049e86-885c-4812-a940-7e6c259d1574	are you tallking about	2025-06-09 19:19:38.688	\N	e7cc9019-994c-431f-bf63-b110dcf6b276	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+36fef150-ddf0-44a4-a42d-67d2b94331d5	nice	2025-06-09 19:25:29.041	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+995833fe-a37c-416f-b089-d0689481b0b5	gaming	2025-06-09 19:25:30.525	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+9bade4f9-8eec-4b5f-9a19-83debb671c7d	nice lah	2025-06-09 19:29:52.633	\N	3a8b7536-8308-4d10-8233-e46caa30067c	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+e8b551a2-072e-4efa-91ad-8196f7b6fe1f	indonesia	2025-06-09 19:35:05.815	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+5d12dee9-1882-4340-9326-2871ce124e6a	ajsdnadnandasdjnajdnandakjnd ajkdnasjkndajkdnaksdasjkndajkdn kajdnjaskdnajkdnajkdnajkdnajkdnajkdnajkdnajkdnajkdnajkn	2025-06-09 19:35:25.229	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+e0970c41-1e60-4b24-a5c1-efce78cbc4cf	testing dlu aja bro 	2025-06-09 19:43:24.43	\N	ad7d0837-da64-47f1-8827-8964954475fe	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+44f8bdfa-12eb-4ec4-bcda-938cfd187e8d	testing dlu aja bro kira kira bisa apa enggak ya kita sebenernya ga tau sih tapi bismillah lets go	2025-06-09 19:43:50.15	\N	ad7d0837-da64-47f1-8827-8964954475fe	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+30c600c6-9bd1-4dc8-a0c4-f62dfe6a2060	nice	2025-06-09 20:35:01.327	\N	4cb1dd26-6526-4f78-9034-aa2fe38c21e7	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+b46b1034-bab3-4015-9aca-8c91efe231cf	lets go	2025-06-09 20:35:02.934	\N	4cb1dd26-6526-4f78-9034-aa2fe38c21e7	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+5e8d4cc8-e645-4c49-aa2c-70e446567835	nice seh	2025-06-09 20:35:04.298	\N	4cb1dd26-6526-4f78-9034-aa2fe38c21e7	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+ea8791f8-8c3f-4d0c-9afc-d38aa7e5c23c	nice	2025-06-09 20:49:08.547	\N	74d9dd35-4725-4cb4-9749-e54c6a2175c3	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+3248e184-791a-40b8-8e36-6ed7e56b3cdd	bro	2025-06-09 20:49:09.6	\N	74d9dd35-4725-4cb4-9749-e54c6a2175c3	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+3fb1a812-e8e5-4485-a4db-867625e10d77	nice	2025-06-09 20:49:11.276	\N	74d9dd35-4725-4cb4-9749-e54c6a2175c3	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+b96431a4-b573-44cd-9705-6b9ba68fc091	tapi yang keren mah	2025-06-09 20:49:13.947	\N	74d9dd35-4725-4cb4-9749-e54c6a2175c3	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+64bce6d8-824b-4b5c-bb8d-09403d087625	itu cuy	2025-06-09 20:49:14.98	\N	74d9dd35-4725-4cb4-9749-e54c6a2175c3	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+40e76d86-5215-4da9-adc0-c324aec524b9	Halo nama saya adalah Muhammad Ilham Isfadhillah, dan saya akan bermain sebagai Duelist. Saya memiliki 1 istri dan namanya adalah heyerin :)	2025-06-09 20:55:42.649	\N	2c401b22-83ea-4ff3-a977-a4cfbae8f5d3	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+eac8dcb1-6c81-4679-ae7c-19de41cd240c	tes	2025-06-09 21:11:42.765	\N	3765a419-0007-4c47-8271-79e84d7ebbeb	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+a8a02db9-69a3-4258-9a68-85c1ea5b1427	te	2025-06-09 21:11:43.266	\N	3765a419-0007-4c47-8271-79e84d7ebbeb	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+6cf9e206-b9f7-43d8-a7fe-a04cf8121dee	nice	2025-06-09 21:11:45.369	\N	3765a419-0007-4c47-8271-79e84d7ebbeb	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+609e2179-cb26-432a-87b5-335566326143	mantap	2025-06-09 21:11:47.25	\N	3765a419-0007-4c47-8271-79e84d7ebbeb	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+de95560a-b1bf-401e-9471-7706f28dd12d	kelas	2025-06-09 21:11:48.715	\N	3765a419-0007-4c47-8271-79e84d7ebbeb	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+997df692-27cd-4758-a9c9-f29b090768ca	jirr	2025-06-09 21:11:50.018	\N	3765a419-0007-4c47-8271-79e84d7ebbeb	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+70a3dd99-6ae1-43cd-baa5-ef45840889c7	nice	2025-06-09 21:13:14.566	\N	3765a419-0007-4c47-8271-79e84d7ebbeb	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+64bcb99d-55c3-4d8c-962f-82280a5788bc	mantep	2025-06-09 21:14:06.754	\N	3765a419-0007-4c47-8271-79e84d7ebbeb	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+1fb5c2fd-3aae-42b5-b8cf-a7fd1d1a82f2	kelas	2025-06-09 21:14:08.347	\N	3765a419-0007-4c47-8271-79e84d7ebbeb	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+903c4718-c9b7-44c1-a873-e3b1a08596d2	test	2025-06-09 21:16:06.802	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+ebad3747-8617-4cd0-b18e-09ab1e7fb7c1	nic	2025-06-09 21:16:07.677	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+8ad0c2b7-9812-41ab-8b0b-bb56631ee6f3	nice	2025-06-09 21:16:09.089	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+4eb0ee55-c0b8-4cee-b33e-0ea26b1f3254	bro	2025-06-09 21:16:09.703	\N	fe2782a6-f9f4-4e54-af63-c6017093a1b1	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+07216524-7205-4365-b280-3b95574848fa	nice	2025-06-10 14:49:32.171	\N	3a8b7536-8308-4d10-8233-e46caa30067c	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+e2498fb5-11c1-4799-8558-c570076acbe0	testing	2025-06-12 01:54:20.588	\N	3a8b7536-8308-4d10-8233-e46caa30067c	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+1c3c3780-fbd8-4c05-9792-67f57d989002	asdasd	2025-06-12 02:07:41.11	\N	3a8b7536-8308-4d10-8233-e46caa30067c	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+cc30d436-be87-4670-9ab4-6e7454fd8851	nice	2025-06-12 20:49:56.498	\N	3a8b7536-8308-4d10-8233-e46caa30067c	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+22eeafbd-6218-4964-9ca8-9e49a910636e	Akhirnya ketemu kakk	2025-06-26 01:01:55.363	\N	ad7d0837-da64-47f1-8827-8964954475fe	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+9cb275fe-f7b2-45e0-a3fb-89f835aa1566	Barangnya ilanggg	2025-06-26 01:10:21.273	\N	2c401b22-83ea-4ff3-a977-a4cfbae8f5d3	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+2a364c14-8d72-4547-b53c-b2ef289204d4	nooo	2025-06-26 01:10:22.149	\N	2c401b22-83ea-4ff3-a977-a4cfbae8f5d3	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+21bfcd46-bacf-4ff6-8cb4-211dfea8905a	barangku ilang	2025-06-26 01:10:23.866	\N	2c401b22-83ea-4ff3-a977-a4cfbae8f5d3	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+ef5bbd68-5f31-41a6-abb3-4179c9594cf5	aasemmm	2025-06-26 01:10:26.145	\N	2c401b22-83ea-4ff3-a977-a4cfbae8f5d3	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+76b1a086-af69-4060-963a-603f02f1fc83	kenapa bisa ilang yakk	2025-06-26 01:10:29.65	\N	2c401b22-83ea-4ff3-a977-a4cfbae8f5d3	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+92743aac-1f1c-48cb-8742-35730a08533b	no weeyyyy	2025-06-26 01:10:32.172	\N	2c401b22-83ea-4ff3-a977-a4cfbae8f5d3	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+\.
+
+
+--
+-- Data for Name: Coordinates; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public."Coordinates" (id, latitude, longitude, "locationName", "postId") FROM stdin;
+e9bfd00a-af84-42e7-b390-6726710c5ded	-7.370011472261283	109.3082799253427	Tangerang, Banten	b9f4d822-2365-4234-8819-d8bd00c3b24e
+cb29203d-cd23-4bde-a9f2-e578e705790d	-5.2356041	119.4992927241063	Perumahan Fakultas Teknik, Bontomarannu, Gowa, Indonesia	fe2782a6-f9f4-4e54-af63-c6017093a1b1
+18ad9be2-da97-4404-ad97-90f08b019235	-6.40719	106.8158371	Depok, Jawa Barat, Indonesia	ad7d0837-da64-47f1-8827-8964954475fe
+ffb60084-6d51-491f-b184-f8b6fad6a728	-7.420500836044511	109.27001953125	null	5a782a29-2a18-4c2f-895e-cc70987b5684
+f18cc97d-78f5-4e83-bd23-4402cc28d427	-7.434090502246336	109.2528533935547	null	4f46ab23-cedd-4d4c-badf-373409af74d4
+bf4f6752-da01-4118-8669-726550bb82e7	-6.36031565	106.8271855906324	Universitas Indonesia, Jalan Prof. Dr. Sudjono D. Pusponegoro, Depok 16424, Jawa Barat, Indonesia	9b642441-9744-42de-bcf2-6d04cc552e0e
+a18cb2a1-c220-47c7-a060-7366fdd73b4b	47.9286915	15.0876554	Gaming, Austria Bawah, Austria	e7cc9019-994c-431f-bf63-b110dcf6b276
+829e431c-e562-4bf6-b65f-3b760bc194c5	-6.3227016	106.7085737	Tangerang Selatan, Banten, Indonesia	4cb1dd26-6526-4f78-9034-aa2fe38c21e7
+3fd0969c-30a2-4dc0-b99f-20dbbf1d2dac	-7.455608714497914	109.2106144924214	null	c8deae4e-f25b-4002-bef9-21058bd2bae8
+b1cee3b9-56e8-4060-9515-ccd5a58b0dfa	-7.430966630150436	109.2509318626207	null	c6386ef6-1ccd-4f88-ba86-8c0a75ab1189
+859c1554-d2e3-402e-871b-1f0af26da43c	63.565747	13.8038166	Tångeråsen, Swedia	62d17282-99ba-4c97-8ba9-4a33b899935b
+604e59af-3377-4494-91e4-7606a365094f	50.59324	5.867828	Verviers, WLG, Belgia	3765a419-0007-4c47-8271-79e84d7ebbeb
+6a8ec611-b608-413e-bccf-8dc95f688da5	-6.25423855	106.5204367794066	Citra Raya Tangerang, Mekar Bakti, Banten, Indonesia	2c401b22-83ea-4ff3-a977-a4cfbae8f5d3
+a16d4d43-1220-4452-8f59-90dd53498703	-7.428246163767684	109.2547512078759	null	922b0dfd-1193-4f06-ac7d-d977efb036b5
+daef868a-7cc8-482f-b494-b4447b1f8cbe	-7.4001499	109.3547025	Kalikabong, Jawa Tengah, Indonesia	3f26cedd-e248-404a-b160-40ee4f4b2e69
+50c0e4ae-d51a-49ea-afd9-ba48fcfb7d46	-7.343903382573149	109.3781661987305	null	3a8b7536-8308-4d10-8233-e46caa30067c
+2ad056f3-6736-4772-a885-3502464a0858	-7.383736584111209	109.3668365478516	null	3eace596-8c43-49b6-969c-eb22d4f7e094
+e7ec6fd6-a971-4f6c-a8fa-287737f96970	-6.40719	106.8158371	Depok, Jawa Barat, Indonesia	f1595d86-c6ae-4e2f-a1e2-e18020cfcc0d
+dfb8da1e-a743-4d58-9d1f-2f0c70bd929d	-6.2362143	106.9987436	Bekasi, Jalan Insinyur Haji Juanda, Proyek, Bekasi 17141, Jawa Barat, Indonesia	1d6a9bd4-f603-41ba-97ab-1312cde18401
+c2ac3ff2-42d8-49cf-af88-55c1dbf5de0e	-7.425936752944982	109.2562866210938	null	74d9dd35-4725-4cb4-9749-e54c6a2175c3
+ed0cb85a-a53f-4210-802a-cbe08a939b3e	1.42776775	103.6294754215502	Legoland Malaysia, 7 Jalan Legoland, Medini, 79250 Iskandar Puteri, Johor, Malaysia	022e6fe5-3e0a-4445-8cc9-fba379ab9b1e
+7505525f-068d-47f7-8eef-ac14ac0ea9eb	-7.467804590164923	109.2560760281616	null	5016748e-bddc-4985-a7dc-1da307cef301
+\.
+
+
+--
+-- Data for Name: Post; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public."Post" (id, "itemName", "itemDetail", "itemLostDate", created_at, updated_at, "userId", "statusId", "categoryId") FROM stdin;
+3a8b7536-8308-4d10-8233-e46caa30067c	a	asdsa	2025-06-17	2025-06-03 19:03:34.23	2025-06-06 11:50:34.476	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21	2	2
+fe2782a6-f9f4-4e54-af63-c6017093a1b1	Piring	Piring 2 sama mangkok 3 geyss hilang	2025-05-14	2025-05-21 20:22:36.824	\N	9d2ec67b-c048-43d4-bb80-57af2593f2d8	1	5
+4f46ab23-cedd-4d4c-badf-373409af74d4	Handphone 	asdada	2025-05-22	2025-05-22 18:06:56.361	\N	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21	1	1
+ad7d0837-da64-47f1-8827-8964954475fe	Laptop Lenovo ROG	3 Laptop cuy ilang di daerah Depok, ciri cirinya yang ijo keren, yyang merah cantik , yang putih agak agak	2025-05-21	2025-05-22 10:49:47.027	2025-05-22 18:22:28.315	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21	2	2
+9b642441-9744-42de-bcf2-6d04cc552e0e	Dari Vue	asdada	2025-05-14	2025-05-24 12:39:15.605	\N	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21	1	2
+3765a419-0007-4c47-8271-79e84d7ebbeb	Pisang 2 	Oke	2025-06-23	2025-06-02 11:58:45.219	2025-06-06 11:57:00.177	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21	2	5
+2c401b22-83ea-4ff3-a977-a4cfbae8f5d3	Sesuatu	Ini adalah barang baru	2025-06-05	2025-06-02 18:08:34.536	2025-06-06 15:31:51.401	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21	2	4
+3eace596-8c43-49b6-969c-eb22d4f7e094	Barang Indonesia	tauu tuhhhh	2025-06-19	2025-06-05 17:37:17.568	2025-06-06 15:33:47.446	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21	1	2
+f1595d86-c6ae-4e2f-a1e2-e18020cfcc0d	Testing Aja	asdada	2025-06-18	2025-06-07 07:39:53.643	\N	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21	1	3
+e7cc9019-994c-431f-bf63-b110dcf6b276	Sepatu Gaming	asdada	2025-05-15	2025-05-28 09:43:49.531	\N	868c8c88-661e-4de1-959b-54f201a3bf2a	1	5
+4cb1dd26-6526-4f78-9034-aa2fe38c21e7	asdada	asdada	2025-05-15	2025-05-28 15:57:23.125	\N	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21	1	3
+5a782a29-2a18-4c2f-895e-cc70987b5684	New Item	asdad	2025-05-08	2025-05-22 11:14:02.025	2025-05-28 15:57:38.547	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21	1	2
+c8deae4e-f25b-4002-bef9-21058bd2bae8	Coba aja	asdasda	2025-05-13	2025-05-28 22:04:04.584	\N	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21	1	4
+c6386ef6-1ccd-4f88-ba86-8c0a75ab1189	Sesuat Aja	asdada	2025-06-18	2025-05-31 20:04:08.059	\N	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21	1	4
+62d17282-99ba-4c97-8ba9-4a33b899935b	PisangEnak	asdada	2025-06-18	2025-06-02 07:04:38.015	\N	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21	1	5
+74d9dd35-4725-4cb4-9749-e54c6a2175c3	New	asdas	2025-06-04	2025-06-07 10:14:02.93	\N	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21	1	4
+1d6a9bd4-f603-41ba-97ab-1312cde18401	Test	Test	2025-06-27	2025-06-07 07:57:35.817	2025-06-07 10:14:50.973	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21	2	4
+922b0dfd-1193-4f06-ac7d-d977efb036b5	TES	ASDAD	2025-06-10	2025-06-02 20:19:43.374	\N	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21	1	1
+b9f4d822-2365-4234-8819-d8bd00c3b24e	Kartu STNK 2	best	2025-05-09	2025-05-16 18:22:58.61	2025-05-20 10:33:09.271	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21	2	3
+022e6fe5-3e0a-4445-8cc9-fba379ab9b1e	Quote	aadsdas	2025-06-19	2025-06-07 16:20:22.499	2025-06-08 10:50:21.871	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21	2	4
+5016748e-bddc-4985-a7dc-1da307cef301	as	asda	2025-06-26	2025-06-10 11:02:22.021	\N	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21	1	2
+3f26cedd-e248-404a-b160-40ee4f4b2e69	Monyey	Jual Aja	2025-06-11	2025-06-03 16:50:08.464	\N	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21	1	5
+\.
+
+
+--
+-- Data for Name: PostCategory; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public."PostCategory" (id, "categoryName") FROM stdin;
+1	Handphone
+2	Laptop
+3	Kartu
+4	Dompet
+5	Lain Lain
+\.
+
+
+--
+-- Data for Name: PostImages; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public."PostImages" (id, "postImageUrl", "postId") FROM stdin;
+3	1747419778532.png	b9f4d822-2365-4234-8819-d8bd00c3b24e
+6	1747858956809.png	fe2782a6-f9f4-4e54-af63-c6017093a1b1
+7	1747858956814.png	fe2782a6-f9f4-4e54-af63-c6017093a1b1
+8	1747910987010.jpg	ad7d0837-da64-47f1-8827-8964954475fe
+9	1747912442016.jpg	5a782a29-2a18-4c2f-895e-cc70987b5684
+10	1747912442016.jpg	5a782a29-2a18-4c2f-895e-cc70987b5684
+11	1747937216342.jpg	4f46ab23-cedd-4d4c-badf-373409af74d4
+12	1747937216342.png	4f46ab23-cedd-4d4c-badf-373409af74d4
+13	1747937216351.png	4f46ab23-cedd-4d4c-badf-373409af74d4
+20	1748090355589.jpg	9b642441-9744-42de-bcf2-6d04cc552e0e
+21	1748090355589.jpg	9b642441-9744-42de-bcf2-6d04cc552e0e
+23	1748425429525.png	e7cc9019-994c-431f-bf63-b110dcf6b276
+24	1748447843108.png	4cb1dd26-6526-4f78-9034-aa2fe38c21e7
+26	1748469844571.png	c8deae4e-f25b-4002-bef9-21058bd2bae8
+27	1748721848048.png	c6386ef6-1ccd-4f88-ba86-8c0a75ab1189
+28	1748847877997.jpg	62d17282-99ba-4c97-8ba9-4a33b899935b
+29	1748865525202.jpg	3765a419-0007-4c47-8271-79e84d7ebbeb
+31	1748887714528.png	2c401b22-83ea-4ff3-a977-a4cfbae8f5d3
+32	1748895583363.png	922b0dfd-1193-4f06-ac7d-d977efb036b5
+33	1748969407979.jpg	3f26cedd-e248-404a-b160-40ee4f4b2e69
+35	1748977414218.png	3a8b7536-8308-4d10-8233-e46caa30067c
+39	1749145037540.png	3eace596-8c43-49b6-969c-eb22d4f7e094
+40	1749281993627.png	f1595d86-c6ae-4e2f-a1e2-e18020cfcc0d
+41	1749283055803.png	1d6a9bd4-f603-41ba-97ab-1312cde18401
+43	1749291242923.png	74d9dd35-4725-4cb4-9749-e54c6a2175c3
+44	1749313222488.png	022e6fe5-3e0a-4445-8cc9-fba379ab9b1e
+45	1749553341970.png	5016748e-bddc-4985-a7dc-1da307cef301
+\.
+
+
+--
+-- Data for Name: PostStatus; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public."PostStatus" (id, "statusName") FROM stdin;
+1	Hilang
+2	Ditemukan
+\.
+
+
+--
+-- Data for Name: Profile; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public."Profile" (id, "imageUrl", "userId") FROM stdin;
+2	1748425384971.jpg	868c8c88-661e-4de1-959b-54f201a3bf2a
+1	1749313016762.png	06d7e569-d5a4-455c-91d6-4c9dfe5b5d21
+\.
+
+
+--
+-- Data for Name: User; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public."User" (id, email, username, password, "phoneNumber") FROM stdin;
+9d2ec67b-c048-43d4-bb80-57af2593f2d8	expess@gmail.com	expessjs	2Log32==5	082114474267
+868c8c88-661e-4de1-959b-54f201a3bf2a	fadhil@gmail.com	fadhil	2Log32==5	089503908873
+ab9ebe46-c0fa-4bff-b3f1-7777a782b366	gamer@gmail.com	gamer	2Log32==5	\N
+95b32cc5-a62f-4414-b1bc-00054b19bc59	testjs@gmail.com	testjs	2Log32==5	\N
+b8c35cfc-fdb9-4a33-97d6-94c72b91582f	test1js@gmail.com	testjs	2Log32==5	082114474267
+56336873-4492-4388-b827-cc7d152377bd	progzz@gmail.com	progz	2Log32==5	\N
+22ed89be-f535-4fe8-865c-7a03cbc1ecc9	progz1@gmail.com	progz	2Log32==5	089503908873
+9ac04a93-8fda-42f6-8e87-5a0827966016	progz2@gmail.com	progz	2Log32==5	\N
+aba63e26-099f-423c-83ad-6ec13324138e	progz3@gmail.com	progz2	2Log32==5	089503908873
+213994f0-7823-48e6-b182-4785542e85df	progz4@gmail.com	progz4	2Log32==5	089503908873
+06d7e569-d5a4-455c-91d6-4c9dfe5b5d21	progz@gmail.com	progz	2Log32==5	089503908873
+\.
+
+
+--
+-- Data for Name: _prisma_migrations; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public._prisma_migrations (id, checksum, finished_at, migration_name, logs, rolled_back_at, started_at, applied_steps_count) FROM stdin;
+f87cd028-e69a-4468-b8ed-5c0915073be4	a43c06d9564289be71d05623579482bf81bc8fbf7c5e5d636aee675233c6a177	2025-05-16 03:17:49.263529+07	20250515201749_new_migration	\N	\N	2025-05-16 03:17:49.247548+07	1
+\.
+
+
+--
+-- Name: PostCategory_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public."PostCategory_id_seq"', 5, true);
+
+
+--
+-- Name: PostImages_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public."PostImages_id_seq"', 45, true);
+
+
+--
+-- Name: PostStatus_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public."PostStatus_id_seq"', 2, true);
+
+
+--
+-- Name: Profile_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public."Profile_id_seq"', 2, true);
+
+
+--
+-- Name: Comments Comments_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Comments"
+    ADD CONSTRAINT "Comments_pkey" PRIMARY KEY (id);
+
+
+--
+-- Name: Coordinates Coordinates_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Coordinates"
+    ADD CONSTRAINT "Coordinates_pkey" PRIMARY KEY (id);
+
+
+--
+-- Name: PostCategory PostCategory_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."PostCategory"
+    ADD CONSTRAINT "PostCategory_pkey" PRIMARY KEY (id);
+
+
+--
+-- Name: PostImages PostImages_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."PostImages"
+    ADD CONSTRAINT "PostImages_pkey" PRIMARY KEY (id);
+
+
+--
+-- Name: PostStatus PostStatus_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."PostStatus"
+    ADD CONSTRAINT "PostStatus_pkey" PRIMARY KEY (id);
+
+
+--
+-- Name: Post Post_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Post"
+    ADD CONSTRAINT "Post_pkey" PRIMARY KEY (id);
+
+
+--
+-- Name: Profile Profile_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Profile"
+    ADD CONSTRAINT "Profile_pkey" PRIMARY KEY (id);
+
+
+--
+-- Name: User User_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."User"
+    ADD CONSTRAINT "User_pkey" PRIMARY KEY (id);
+
+
+--
+-- Name: _prisma_migrations _prisma_migrations_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public._prisma_migrations
+    ADD CONSTRAINT _prisma_migrations_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: Coordinates_postId_key; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE UNIQUE INDEX "Coordinates_postId_key" ON public."Coordinates" USING btree ("postId");
+
+
+--
+-- Name: PostCategory_categoryName_key; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE UNIQUE INDEX "PostCategory_categoryName_key" ON public."PostCategory" USING btree ("categoryName");
+
+
+--
+-- Name: PostStatus_statusName_key; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE UNIQUE INDEX "PostStatus_statusName_key" ON public."PostStatus" USING btree ("statusName");
+
+
+--
+-- Name: Profile_userId_key; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE UNIQUE INDEX "Profile_userId_key" ON public."Profile" USING btree ("userId");
+
+
+--
+-- Name: User_email_key; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE UNIQUE INDEX "User_email_key" ON public."User" USING btree (email);
+
+
+--
+-- Name: User_id_key; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE UNIQUE INDEX "User_id_key" ON public."User" USING btree (id);
+
+
+--
+-- Name: Comments Comments_postId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Comments"
+    ADD CONSTRAINT "Comments_postId_fkey" FOREIGN KEY ("postId") REFERENCES public."Post"(id) ON UPDATE CASCADE ON DELETE RESTRICT;
+
+
+--
+-- Name: Comments Comments_userId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Comments"
+    ADD CONSTRAINT "Comments_userId_fkey" FOREIGN KEY ("userId") REFERENCES public."User"(id) ON UPDATE CASCADE ON DELETE RESTRICT;
+
+
+--
+-- Name: Coordinates Coordinates_postId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Coordinates"
+    ADD CONSTRAINT "Coordinates_postId_fkey" FOREIGN KEY ("postId") REFERENCES public."Post"(id) ON UPDATE CASCADE ON DELETE RESTRICT;
+
+
+--
+-- Name: PostImages PostImages_postId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."PostImages"
+    ADD CONSTRAINT "PostImages_postId_fkey" FOREIGN KEY ("postId") REFERENCES public."Post"(id) ON UPDATE CASCADE ON DELETE RESTRICT;
+
+
+--
+-- Name: Post Post_categoryId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Post"
+    ADD CONSTRAINT "Post_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES public."PostCategory"(id) ON UPDATE CASCADE ON DELETE RESTRICT;
+
+
+--
+-- Name: Post Post_statusId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Post"
+    ADD CONSTRAINT "Post_statusId_fkey" FOREIGN KEY ("statusId") REFERENCES public."PostStatus"(id) ON UPDATE CASCADE ON DELETE RESTRICT;
+
+
+--
+-- Name: Post Post_userId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Post"
+    ADD CONSTRAINT "Post_userId_fkey" FOREIGN KEY ("userId") REFERENCES public."User"(id) ON UPDATE CASCADE ON DELETE RESTRICT;
+
+
+--
+-- Name: Profile Profile_userId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Profile"
+    ADD CONSTRAINT "Profile_userId_fkey" FOREIGN KEY ("userId") REFERENCES public."User"(id) ON UPDATE CASCADE ON DELETE RESTRICT;
+
+
+--
+-- Name: SCHEMA public; Type: ACL; Schema: -; Owner: postgres
+--
+
+REVOKE USAGE ON SCHEMA public FROM PUBLIC;
+
+
+--
+-- PostgreSQL database dump complete
+--
+
